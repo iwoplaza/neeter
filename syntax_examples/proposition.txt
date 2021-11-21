@@ -1,0 +1,32 @@
+@:
+    #title: [weight=bold]
+
+    def snippet(index):
+        show("Expression" . index . "{{x=" . index*2 . "\n")
+        text("Expression")
+
+#title: Dokument testowy
+
+#text:
+    Hello there
+    Something nice
+    I'm writing to tell you that I'm emulated
+    {{x=15}}
+
+    [color=0xff0000]:
+        {{x*2=0}}
+
+    @:
+        set i = 1
+        show(`Welp, this is wierd innit ${i}`)
+
+
+
+
+
+
+
+ZAD:
+- Przygotować wstępną gramatykę w BNFie.
+- Wygenerować parser przez ANTLR.
+- Wstępny core języka.
