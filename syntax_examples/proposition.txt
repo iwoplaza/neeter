@@ -18,7 +18,7 @@
 
     @:
         set i = 1
-        show(`Welp, this is wierd innit ${i}`)
+        show("Welp, this is wierd innit: " i " " j " " k)
 
 
 

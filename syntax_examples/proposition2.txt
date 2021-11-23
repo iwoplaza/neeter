@@ -1,0 +1,29 @@
+@ {
+    class title = #title[weight=bold];
+
+    def snippet(index) {
+        show("Expression");
+        show(index);
+        show(": {{x=");
+        show(index * 2);
+        show("}}\n");
+    }
+}
+
+#title { Dokument testowy }
+
+#text {
+    Hello there
+    Something nice
+    I'm writing to tell you that I'm emulated
+    {{x=15}}
+
+    [color=0xff0000] {
+        {{x*2=0}}
+    }
+
+    @ {
+        let i = 1;
+        show("Welp, this is wierd innit: " i " " j " " k);
+    }
+}
