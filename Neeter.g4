@@ -18,19 +18,22 @@ program: content+ EOF;
 style_scope: (style_class|style_description|(style_class style_description)) '{' content+ '}';
 style_class: '#' WORD;
 style_description: '[' ']';
-content: text | formula | style_scope;
+content: text | formula | style_scope | newline;
 text: (WORD)+;
 formula: '{{' (WORD)+ '}}';
+newline: NEWLINE;
 
 /*
  * lexer rules
  */
 
-WORD: WORD_ITEM+;
+NEWLINE: '\n' WHITESPACE* '\n';
 
 WHITESPACE
  : SPACES -> skip
  ;
+
+WORD: WORD_ITEM+;
 
 OPEN_PAREN: '(';
 CLOSE_PAREN: ')';
@@ -51,7 +54,7 @@ UNKNOWN_CHAR
  */
 
 fragment SPACES
- : [ \t]+
+ : [ \n\t]+
  ;
 
 fragment COMMENT
@@ -66,7 +69,7 @@ fragment WORD_ITEM
  ;
 
 fragment TEXT_CHAR
- : ~([ \t] | '\\' | '[' | ']' | '{' | '}' | '#')
+ : ~([ \n\t] | '\\' | '[' | ']' | '{' | '}' | '#')
  ;
 
 fragment TEXT_ESCAPE_SEQ : '\\' . ;
