@@ -8,8 +8,9 @@
 <DOUBLE_CLOSE_BRACE> ::= "}}"
 <HASH> ::= "#"
 
-<symbol> ::= "(" | ")" | "<" | ">" | "'" | '"' | "=" | "|" | "." | "," | ";" | "_"
-<digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+<symbol> ::= "(" | ")" | "<" | ">" | "'" | '"' 
+	| "=" | "|" | "." | "," | ";" | "_"
+<digit> ::=  "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 <letter> ::= "A" | "B" | "C" | "D" | "E" | "F" | "G"
        | "H" | "I" | "J" | "K" | "L" | "M" | "N"
        | "O" | "P" | "Q" | "R" | "S" | "T" | "U"
@@ -29,9 +30,9 @@
 
 <formula> ::= <DOUBLE_OPEN_BRACE> <WORD>+ <DOUBLE_CLOSE_BRACE>
 <text> ::= <WORD>+
-<content> ::= {<text> | <formula>}+
 <style_description> ::= <OPEN_BRACK> <CLOSE_BRACK>
 <style_class> ::= <HASH> <WORD>
-<style_scope> ::= {<style_class> | <style_description> | <style_class> <style_description>} <OPEN_BRACE> <content> <CLOSE_BRACE>
+<style_scope> ::= {<style_class> | <style_description> | <style_class> <style_description>} <OPEN_BRACE> <content>+ <CLOSE_BRACE>
+<content> ::= <text> | <formula> | <style_scope>
 
-<program> ::= {<style_scope> | <content>}+
+<program> ::= <content>+
