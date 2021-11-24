@@ -14,11 +14,11 @@ boolean gathering_class_id = false;
  * parser rules
  */
 
-program: (style_scope | content)+ EOF;
-style_scope: (style_class|style_description|(style_class style_description)) '[' content ']';
+program: content+ EOF;
+style_scope: (style_class|style_description|(style_class style_description)) '{' content+ '}';
 style_class: '#' WORD;
 style_description: '[' ']';
-content: ((text|formula))+;
+content: text | formula | style_scope;
 text: (WORD)+;
 formula: '{{' (WORD)+ '}}';
 
