@@ -19,21 +19,19 @@
        | "q" | "r" | "s" | "t" | "u" | "v" | "w"
        | "x" | "y" | "z"
 
-<SPECIAL_SYMBOL> ::= "[" | "]" | "{" | "}"
+<SPECIAL_SYMBOL> ::= "[" | "]" | "{" | "}"	
 <TEXT_CHAR> ::= <letter> | <digit> | <symbol>
 <char> ::= <TEXT_CHAR> | <SPECIAL_SYMBOL>
 <TEXT_ESCAPE_SEQ> ::= "\"<char>
 <WORD_ITEM> ::= <TEXT_CHAR> | <TEXT_ESCAPE_SEQ>
-<WS> ::= " " | "\t"
-<WHITESPACE> ::= <WS>+
 
-<WORD> ::= <WHITESPACE>* <WORD_ITEM>+ <WHITESPACE>*
+<WORD> ::= <WORD_ITEM>+
 
-<formula> ::= <WHITESPACE>* <DOUBLE_OPEN_BRACE> <WORD>+ <DOUBLE_CLOSE_BRACE> <WHITESPACE>*
+<formula> ::= <DOUBLE_OPEN_BRACE> <WORD>+ <DOUBLE_CLOSE_BRACE>
 <text> ::= <WORD>+
 <content> ::= {<text> | <formula>}+
-<style_description> ::= <WHITESPACE>* <OPEN_BRACK> <WHITESPACE>* <CLOSE_BRACK> <WHITESPACE>*
-<style_class> ::= <WHITESPACE>* <HASH> <WORD> <WHITESPACE>*
-<style_scope> ::= <WHITESPACE>* {<style_class> | <style_description> | <style_class> <style_description>} <WHITESPACE>* <OPEN_BRACE> <content> <CLOSE_BRACE> <WHITESPACE>*
+<style_description> ::= <OPEN_BRACK> <CLOSE_BRACK>
+<style_class> ::= <HASH> <WORD>
+<style_scope> ::= {<style_class> | <style_description> | <style_class> <style_description>} <OPEN_BRACE> <content> <CLOSE_BRACE>
 
 <program> ::= {<style_scope> | <content>}+
