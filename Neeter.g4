@@ -15,9 +15,9 @@ boolean gathering_class_id = false;
  */
 
 program: (style_scope | content)+ EOF;
-style_scope: (style_class|style_description|(style_class style_description)) OPEN_BRACE content CLOSE_BRACE;
-style_class: HASH WORD;
-style_description: OPEN_BRACK CLOSE_BRACK;
+style_scope: (style_class|style_description|(style_class style_description)) '[' content ']';
+style_class: '#' WORD;
+style_description: '[' ']';
 content: ((text|formula))+;
 text: (WORD)+;
 formula: '{{' (WORD)+ '}}';
@@ -37,8 +37,8 @@ CLOSE_PAREN: ')';
 OPEN_BRACK: '[';
 CLOSE_BRACK: ']';
 OPEN_BRACE: '{';
-DOUBLE_OPEN_BRACE: '{{';
 CLOSE_BRACE: '}';
+DOUBLE_OPEN_BRACE: '{{';
 DOUBLE_CLOSE_BRACE: '}}';
 HASH: '#';
 
