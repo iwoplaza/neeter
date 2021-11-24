@@ -1,5 +1,3 @@
-// TODO whitespace after <WHITESPACE><WORD>
-
 <OPEN_PAREN> ::= "("
 <CLOSE_PAREN>::= ")"
 <OPEN_BRACK> ::= "["
@@ -21,20 +19,21 @@
        | "q" | "r" | "s" | "t" | "u" | "v" | "w"
        | "x" | "y" | "z"
 
+<SPECIAL_SYMBOL> ::= "[" | "]" | "{" | "}"
 <TEXT_CHAR> ::= <letter> | <digit> | <symbol>
-<char> ::= <TEXT_CHAR> | "[" | "]" | "{" | "}"			// TODO... is it all
+<char> ::= <TEXT_CHAR> | <SPECIAL_SYMBOL>
 <TEXT_ESCAPE_SEQ> ::= "\"<char>
 <WORD_ITEM> ::= <TEXT_CHAR> | <TEXT_ESCAPE_SEQ>
-
+<WS> ::= " " | "\t"
 <WHITESPACE> ::= <WS>+
-<WS> ::= " " | "\t"										// TODO...	//<many_words> ::= <WORD>|<many_words><WHITESPACE><WORD>
-<WORD> ::= <WORD_ITEM>+
 
-<formula> ::= 	<DOUBLE_OPEN_BRACE><WORD>+<DOUBLE_CLOSE_BRACE>
+<WORD> ::= <WHITESPACE>* <WORD_ITEM>+ <WHITESPACE>*
+
+<formula> ::= <WHITESPACE>* <DOUBLE_OPEN_BRACE> <WORD>+ <DOUBLE_CLOSE_BRACE> <WHITESPACE>*
 <text> ::= <WORD>+
-<content> ::= {<text>|<formula>}+
-<style_description> ::= <OPEN_BRACK><CLOSE_BRACK>
-<style_class> ::= <HASH><WORD>
-<style_scope> ::= { <style_class>|<style_description>|<style_class><style_description>}<OPEN_BRACE><content><CLOSE_BRACE>
+<content> ::= {<text> | <formula>}+
+<style_description> ::= <WHITESPACE>* <OPEN_BRACK> <WHITESPACE>* <CLOSE_BRACK> <WHITESPACE>*
+<style_class> ::= <WHITESPACE>* <HASH> <WORD> <WHITESPACE>*
+<style_scope> ::= <WHITESPACE>* {<style_class> | <style_description> | <style_class> <style_description>} <WHITESPACE>* <OPEN_BRACE> <content> <CLOSE_BRACE> <WHITESPACE>*
 
-<program> ::= {<style_scope>|<content>}+
+<program> ::= {<style_scope> | <content>}+
