@@ -21,9 +21,44 @@ public class NeeterListener extends NeeterBaseListener
     {
         {
             StyleClass titleClass = new StyleClass("title");
-            titleClass.setProperty(StylableProperty.SIZE, 20);
+            titleClass.setProperty(StylableProperty.STANDALONE, true);
+            titleClass.setProperty(StylableProperty.SIZE, 40);
+            titleClass.setProperty(StylableProperty.ALIGNMENT, "center");
+            titleClass.setProperty(StylableProperty.MARGIN_BOTTOM, 20);
+            titleClass.setProperty(StylableProperty.COLOR, 0x2266aa);
             classRepository.registerClass("title", titleClass);
         }
+
+        {
+            StyleClass h1Class = new StyleClass("h1");
+            h1Class.setProperty(StylableProperty.STANDALONE, true);
+            h1Class.setProperty(StylableProperty.SIZE, 26);
+            h1Class.setProperty(StylableProperty.MARGIN_TOP, 10);
+            h1Class.setProperty(StylableProperty.MARGIN_BOTTOM, 5);
+            h1Class.setProperty(StylableProperty.COLOR, 0x2266aa);
+            classRepository.registerClass("h1", h1Class);
+        }
+
+        {
+            StyleClass strongClass = new StyleClass("strong");
+            strongClass.setProperty(StylableProperty.WEIGHT, 600);
+            classRepository.registerClass("strong", strongClass);
+        }
+    }
+
+    public Collection<String> getErrors()
+    {
+        return errors;
+    }
+
+    public StyleScope getRootScope()
+    {
+        return rootScope;
+    }
+
+    public ClassRepository getClassRepository()
+    {
+        return classRepository;
     }
 
     @Override
@@ -93,18 +128,9 @@ public class NeeterListener extends NeeterBaseListener
         this.currentScope.addChildNode(new FormulaNode(stringBuilder.toString()));
     }
 
-    public Collection<String> getErrors()
+    @Override
+    public void enterNewline(NeeterParser.NewlineContext ctx)
     {
-        return errors;
-    }
-
-    public StyleScope getRootScope()
-    {
-        return rootScope;
-    }
-
-    public ClassRepository getClassRepository()
-    {
-        return classRepository;
+        this.currentScope.addChildNode(new NewlineNode());
     }
 }

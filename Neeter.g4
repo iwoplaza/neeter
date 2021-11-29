@@ -1,7 +1,5 @@
 grammar Neeter;
 
-tokens { INDENT, DEDENT }
-
 @header {
 package com.neeter.grammar;
 }

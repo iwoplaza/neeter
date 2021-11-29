@@ -31,13 +31,25 @@ public class Main
             // Walking the tree
             ParseTreeWalker walker = new ParseTreeWalker();
             NeeterListener listener = new NeeterListener();
-            walker.walk(listener, tree);
 
-            Collection<String> error = listener.getErrors();
-            if (error.size() > 0)
+            try
+            {
+                walker.walk(listener, tree);
+            }
+            catch (Exception e)
+            {
+                if (listener.getErrors().size() == 0)
+                {
+                    e.printStackTrace();
+                    return;
+                }
+            }
+
+            Collection<String> errors = listener.getErrors();
+            if (errors.size() > 0)
             {
                 System.err.println("Failed to compile, encountered errors:");
-                error.forEach(System.err::println);
+                errors.forEach(System.err::println);
                 return;
             }
 

@@ -12,6 +12,11 @@ public class HTMLGenerator
     {
         PROPERTY_PARSER_MAP.put(StylableProperty.SIZE, value -> String.format("font-size: %dpx", (int) value));
         PROPERTY_PARSER_MAP.put(StylableProperty.COLOR, value -> String.format("color: #%05X", (int) value));
+        PROPERTY_PARSER_MAP.put(StylableProperty.STANDALONE, value -> String.format("display: %s", value.equals(true) ? "block" : "inline"));
+        PROPERTY_PARSER_MAP.put(StylableProperty.ALIGNMENT, value -> String.format("text-align: %s", value));
+        PROPERTY_PARSER_MAP.put(StylableProperty.WEIGHT, value -> String.format("font-weight: %s", (int) value));
+        PROPERTY_PARSER_MAP.put(StylableProperty.MARGIN_TOP, value -> String.format("margin-top: %dpx", (int) value));
+        PROPERTY_PARSER_MAP.put(StylableProperty.MARGIN_BOTTOM, value -> String.format("margin-bottom: %dpx", (int) value));
     }
 
     private final StyleScope rootScope;
@@ -29,13 +34,18 @@ public class HTMLGenerator
         {
             TextNode textNode = ((TextNode) node);
             stringBuilder.append(textNode.getText());
+            stringBuilder.append(" ");
         }
         else if (node instanceof FormulaNode)
         {
             FormulaNode textNode = ((FormulaNode) node);
-            stringBuilder.append("<span class=\"ntr-formula\">");
+            stringBuilder.append("<span class=\"neet-formula\">");
             stringBuilder.append(textNode.getFormula());
             stringBuilder.append("</span>");
+        }
+        else if (node instanceof NewlineNode)
+        {
+            stringBuilder.append("</br>");
         }
         else if (node instanceof StyleScope)
         {
@@ -44,7 +54,7 @@ public class HTMLGenerator
             StyleClass styleClass = scopeNode.getAppliedClass();
             if (styleClass != null)
             {
-                stringBuilder.append("<span class=\"ntr-class-");
+                stringBuilder.append("<span class=\"neet-class-");
                 stringBuilder.append(styleClass.getKey());
                 stringBuilder.append("\">");
             }
@@ -58,6 +68,8 @@ public class HTMLGenerator
             {
                 stringBuilder.append("</span>");
             }
+
+            stringBuilder.append(" ");
         }
     }
 
@@ -80,9 +92,12 @@ public class HTMLGenerator
                 "    <title>Document</title>\n" +
                 "    <style>\n\n");
 
+        stringBuilder.append("body { font-family: sans-serif; }");
+        stringBuilder.append(".neet-formula { font-family: serif; display: inline-block; background-color: #ddd; padding: 3px 3px; margin: 0 3px; font-weight: 200; }");
+
         for (StyleClass styleClass : classRepository.getClasses())
         {
-            stringBuilder.append(".ntr-class-");
+            stringBuilder.append(".neet-class-");
             stringBuilder.append(styleClass.getKey());
             stringBuilder.append(" {\n");
 
