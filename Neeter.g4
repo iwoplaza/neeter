@@ -5,7 +5,8 @@ package com.neeter.grammar;
 }
 
 @members {
-boolean gathering_class_id = false;
+boolean gatheringClassId = false;
+boolean insideFormula = false;
 }
 
 /*
@@ -39,8 +40,12 @@ OPEN_BRACK: '[';
 CLOSE_BRACK: ']';
 OPEN_BRACE: '{';
 CLOSE_BRACE: '}';
-DOUBLE_OPEN_BRACE: '{{';
-DOUBLE_CLOSE_BRACE: '}}';
+DOUBLE_OPEN_BRACE: '{{' {
+    insideFormula = true;
+};
+DOUBLE_CLOSE_BRACE: '}}'  {
+    insideFormula = false;
+};
 HASH: '#';
 
 UNKNOWN_CHAR
