@@ -62,9 +62,9 @@ public class NeeterListener extends NeeterBaseListener
     }
 
     @Override
-    public void enterStyle_scope(NeeterParser.Style_scopeContext ctx)
+    public void enterStyleScope(NeeterParser.StyleScopeContext ctx)
     {
-        NeeterParser.Style_classContext classContext = ctx.style_class();
+        NeeterParser.StyleClassContext classContext = ctx.styleClass();
 
         if (classContext != null)
         {
@@ -93,7 +93,7 @@ public class NeeterListener extends NeeterBaseListener
     }
 
     @Override
-    public void exitStyle_scope(NeeterParser.Style_scopeContext ctx)
+    public void exitStyleScope(NeeterParser.StyleScopeContext ctx)
     {
         this.currentScope = this.currentScope.getParent();
     }

@@ -1,13 +1,8 @@
 #title {
     #strong {Research report} - First edition
 }
-
 This is an example document. Simple formula: {{x = 1 + 2 + 4 + ... + 128}}.
+
 I come in #strong { peace } Humans.
-
-#h2 { Intro }
+#h1 { Intro }
 This is a very important section.
-
-#title {
-    Koniec #strong { dokumentu }
-}

@@ -14,10 +14,10 @@ boolean insideFormula = false;
  */
 
 program: content+ EOF;
-style_scope: (style_class|style_description|(style_class style_description)) '{' content+ '}';
-style_class: '#' WORD;
-style_description: '[' ']';
-content: text | formula | style_scope | newline;
+styleScope: (styleClass|styleDescription|(styleClass styleDescription)) '{' content+ '}';
+styleClass: '#' WORD;
+styleDescription: '[' ']';
+content: text | formula | styleScope | newline;
 text: (WORD)+;
 formula: '{{' (WORD)+ '}}';
 newline: NEWLINE;
@@ -26,11 +26,9 @@ newline: NEWLINE;
  * lexer rules
  */
 
-NEWLINE: '\n' WHITESPACE* '\n';
+NEWLINE: NEWLINE_CHAR NEWLINE_CHAR+;
 
-WHITESPACE
- : SPACES -> skip
- ;
+WHITESPACE : (SPACES|NEWLINE_CHAR) -> skip;
 
 WORD: WORD_ITEM+;
 
@@ -57,7 +55,11 @@ UNKNOWN_CHAR
  */
 
 fragment SPACES
- : [ \n\t]+
+ : [ \t]+
+ ;
+
+fragment NEWLINE_CHAR
+ : '\r'? '\n'
  ;
 
 fragment COMMENT
