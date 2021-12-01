@@ -29,10 +29,27 @@ public class FunctionCall implements IExpression, IExpressionHost
             throw new PreeterRuntimeError(String.format("Tried to call undefined function: %s", this.id));
         }
 
-        Collection<Object> argValues = argumentExpressions.stream().map(e -> e.evaluate(context)).collect(Collectors.toList());
+        // General argument values
+        List<Object> argValues = argumentExpressions.stream().map(e -> e.evaluate(context)).collect(Collectors.toList());
 
         IExecutionContext functionContext = context.createFunctionCall();
         functionContext.setArgs(argValues);
+
+        // Named parameters
+        List<String> parameterNames = expression.getNamedParameters();
+
+        if (parameterNames.size() > argValues.size())
+        {
+            throw new PreeterRuntimeError(String.format("Function %s only takes %d arguments, %d given", this.id, parameterNames.size(), argValues.size()));
+        }
+
+        for (int i = 0; i < parameterNames.size(); ++i)
+        {
+            String param = parameterNames.get(i);
+            Object value = argValues.get(i);
+
+            functionContext.declareVariable(param, value);
+        }
 
         return expression.evaluate(functionContext);
     }

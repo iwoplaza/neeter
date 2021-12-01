@@ -8,9 +8,9 @@ import java.util.Map;
 
 public class ExecutionContext extends BaseExecutionContext
 {
-    final Map<String, Object> globalVariables = new HashMap<>();
-    final Map<String, Object> parentVariables = new HashMap<>();
-    final Map<String, Object> variables = new HashMap<>();
+    final Map<String, Variable> globalVariables = new HashMap<>();
+    final Map<String, Variable> parentVariables = new HashMap<>();
+    final Map<String, Variable> variables = new HashMap<>();
 
     public ExecutionContext(FunctionRepository functionRepository, StringBuilder outputBuilder)
     {
@@ -24,7 +24,7 @@ public class ExecutionContext extends BaseExecutionContext
         {
             throw new PreeterRuntimeError(String.format("Tried to redeclare variable %s in the same scope.", key));
         }
-        this.variables.put(key, value);
+        this.variables.put(key, new Variable(value));
     }
 
     @Override
@@ -34,15 +34,15 @@ public class ExecutionContext extends BaseExecutionContext
 
         if (this.variables.containsKey(key))
         {
-            this.variables.put(key, value);
+            this.variables.get(key).setValue(value);
         }
         else if (this.parentVariables.containsKey(key))
         {
-            this.parentVariables.put(key, value);
+            this.parentVariables.get(key).setValue(value);
         }
         else if (this.globalVariables.containsKey(key))
         {
-            this.globalVariables.put(key, value);
+            this.globalVariables.get(key).setValue(value);
         }
         else
         {
@@ -57,15 +57,15 @@ public class ExecutionContext extends BaseExecutionContext
 
         if (this.variables.containsKey(key))
         {
-            return this.variables.get(key);
+            return this.variables.get(key).getValue();
         }
         else if (this.parentVariables.containsKey(key))
         {
-            return this.parentVariables.get(key);
+            return this.parentVariables.get(key).getValue();
         }
         else if (this.globalVariables.containsKey(key))
         {
-            return this.globalVariables.get(key);
+            return this.globalVariables.get(key).getValue();
         }
         else
         {

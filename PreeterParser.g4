@@ -21,7 +21,7 @@ funcDef: 'def' ID '(' idList? ')' '{' (statement|expr)* '}';
 statement: codeScope|varDeclaration|varAssignment;
 varDeclaration: 'let' varId=ID ('=' expr)? ';';
 varAssignment: varId=ID ('=' expr)? ';';
-codeScope: '{' statement* '}';
+codeScope: '{' (statement|expr)* '}';
 
 // Expressions
 expr

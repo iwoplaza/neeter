@@ -14,7 +14,6 @@ public class IdentifierExpression implements IExpression
     @Override
     public Object evaluate(IExecutionContext context)
     {
-        // TODO Add identifier evaluation
-        return null;
+        return context.getVariable(identifier);
     }
 }

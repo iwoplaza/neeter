@@ -1,5 +1,6 @@
 package com.neeter.preeter;
 
+import com.neeter.preeter.execution.ExecutionContext;
 import com.neeter.preeter.execution.IExecutionContext;
 import com.neeter.preeter.expression.IExpression;
 import com.neeter.preeter.statement.ExpressionEvaluation;
@@ -27,9 +28,10 @@ public class CodeScope implements ICodeScope
     @Override
     public Object evaluate(IExecutionContext context)
     {
+        IExecutionContext scopeContext = context.createDeeperScope();
         for (IStatement statement : statements)
         {
-            statement.run(context);
+            statement.run(scopeContext);
         }
 
         return null;

@@ -40,6 +40,19 @@ public class VariableAssignment implements IStatement, IExpressionHost
     @Override
     public void run(IExecutionContext context)
     {
-        // TODO Add variable assignment
+        Object value = null;
+        if (valueExpression != null)
+        {
+            value = valueExpression.evaluate(context);
+        }
+
+        if (declaration)
+        {
+            context.declareVariable(id, value);
+        }
+        else
+        {
+            context.setVariable(id, value);
+        }
     }
 }

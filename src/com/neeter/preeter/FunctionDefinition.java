@@ -6,16 +6,23 @@ import com.neeter.preeter.statement.ExpressionEvaluation;
 import com.neeter.preeter.statement.IStatement;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class FunctionDefinition implements ICodeScope, IFunctionDefinition
 {
     private boolean defined = false;
+    private List<String> parameterNames;
     private final List<IStatement> statements = new ArrayList<>();
 
-    public FunctionDefinition markDefined()
+    public FunctionDefinition()
     {
-        defined = true;
+    }
+
+    public FunctionDefinition markDefined(List<String> parameterNames)
+    {
+        this.defined = true;
+        this.parameterNames = parameterNames;
         return this;
     }
 
@@ -23,6 +30,12 @@ public class FunctionDefinition implements ICodeScope, IFunctionDefinition
     public boolean isDefined()
     {
         return defined;
+    }
+
+    @Override
+    public List<String> getNamedParameters()
+    {
+        return parameterNames;
     }
 
     @Override

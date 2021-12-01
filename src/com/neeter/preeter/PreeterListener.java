@@ -4,10 +4,12 @@ import com.neeter.grammar.PreeterParser;
 import com.neeter.grammar.PreeterParserBaseListener;
 import com.neeter.preeter.expression.*;
 import com.neeter.preeter.statement.VariableAssignment;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 public class PreeterListener extends PreeterParserBaseListener
 {
@@ -53,7 +55,9 @@ public class PreeterListener extends PreeterParserBaseListener
     {
         String funcId = ctx.ID().getText();
 
-        FunctionDefinition def = functionRepository.defineFunction(funcId);
+        List<String> parameterNames = ctx.idList().ID().stream().map(ParseTree::getText).collect(Collectors.toList());
+
+        FunctionDefinition def = functionRepository.defineFunction(funcId, parameterNames);
         scopeStack.push(def);
         expressionHostStack.push(def);
     }
@@ -122,7 +126,9 @@ public class PreeterListener extends PreeterParserBaseListener
         }
         else if (ctx.literal().STRING_LITERAL() != null)
         {
-            expressionHostStack.peek().receiveExpression(new LiteralExpression(ctx.literal().STRING_LITERAL().getText()));
+            String text = ctx.literal().STRING_LITERAL().getText();
+            text = LiteralHelper.processStringLiteral(text);
+            expressionHostStack.peek().receiveExpression(new LiteralExpression(text));
         }
         else
         {
@@ -140,7 +146,7 @@ public class PreeterListener extends PreeterParserBaseListener
     @Override
     public void enterMultiplyExpr(PreeterParser.MultiplyExprContext ctx)
     {
-        BinaryOperation op = new BinaryOperation((a, b) -> (int)a * (int)b);
+        BinaryOperation op = new BinaryOperation((c, a, b) -> (int)a.evaluate(c) * (int)b.evaluate(c));
         expressionHostStack.peek().receiveExpression(op);
         expressionHostStack.push(op);
     }
@@ -154,7 +160,7 @@ public class PreeterListener extends PreeterParserBaseListener
     @Override
     public void enterAddExpr(PreeterParser.AddExprContext ctx)
     {
-        BinaryOperation op = new BinaryOperation((a, b) -> (int)a + (int)b);
+        BinaryOperation op = new BinaryOperation((c, a, b) -> (int)a.evaluate(c) + (int)b.evaluate(c));
         expressionHostStack.peek().receiveExpression(op);
         expressionHostStack.push(op);
     }
@@ -168,7 +174,7 @@ public class PreeterListener extends PreeterParserBaseListener
     @Override
     public void enterSubtractExpr(PreeterParser.SubtractExprContext ctx)
     {
-        BinaryOperation op = new BinaryOperation((a, b) -> (int)a - (int)b);
+        BinaryOperation op = new BinaryOperation((c, a, b) -> (int)a.evaluate(c) - (int)b.evaluate(c));
         expressionHostStack.peek().receiveExpression(op);
         expressionHostStack.push(op);
     }
@@ -182,7 +188,7 @@ public class PreeterListener extends PreeterParserBaseListener
     @Override
     public void enterDivideExpr(PreeterParser.DivideExprContext ctx)
     {
-        BinaryOperation op = new BinaryOperation((a, b) -> (int)a / (int)b);
+        BinaryOperation op = new BinaryOperation((c, a, b) -> (int)a.evaluate(c) / (int)b.evaluate(c));
         expressionHostStack.peek().receiveExpression(op);
         expressionHostStack.push(op);
     }

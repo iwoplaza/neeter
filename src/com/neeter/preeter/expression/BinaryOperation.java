@@ -2,17 +2,15 @@ package com.neeter.preeter.expression;
 
 import com.neeter.preeter.execution.IExecutionContext;
 
-import java.util.function.BiFunction;
-
 public class BinaryOperation implements IExpression, IExpressionHost
 {
-    private final BiFunction<Object, Object, Object> perform;
+    private final EvaluationFunction evaluationFunction;
     private IExpression leftSide;
     private IExpression rightSide;
 
-    public BinaryOperation(BiFunction<Object, Object, Object> perform)
+    public BinaryOperation(EvaluationFunction evaluationFunction)
     {
-        this.perform = perform;
+        this.evaluationFunction = evaluationFunction;
     }
 
     @Override
@@ -21,7 +19,7 @@ public class BinaryOperation implements IExpression, IExpressionHost
         assert(leftSide != null);
         assert(rightSide != null);
 
-        return perform.apply(leftSide, rightSide);
+        return evaluationFunction.evaluate(context, leftSide, rightSide);
     }
 
     @Override
@@ -39,5 +37,11 @@ public class BinaryOperation implements IExpression, IExpressionHost
         {
             throw new IllegalStateException("A binary operation can only take exactly two child expressions.");
         }
+    }
+
+    @FunctionalInterface
+    public interface EvaluationFunction
+    {
+        Object evaluate(IExecutionContext ctx, IExpression leftSide, IExpression rightSide);
     }
 }

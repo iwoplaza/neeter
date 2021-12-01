@@ -18,6 +18,8 @@ public class PreeterEngine
     {
         StringBuilder stringBuilder = new StringBuilder();
 
+        RootExecutionContext context = new RootExecutionContext(functionRepository, stringBuilder);
+
         for (IPreeterNode node : nodes)
         {
             if (node instanceof PreeterTextNode)
@@ -28,7 +30,6 @@ public class PreeterEngine
             {
                 PreeterCodeNode codeNode = (PreeterCodeNode) node;
 
-                RootExecutionContext context = new RootExecutionContext(functionRepository, stringBuilder);
                 codeNode.evaluate(context);
             }
         }

@@ -3,6 +3,7 @@ package com.neeter.preeter;
 import com.neeter.preeter.expression.IExpression;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FunctionRepository
@@ -14,13 +15,13 @@ public class FunctionRepository
         functionDefinitionMap.put(key, def);
     }
 
-    public FunctionDefinition defineFunction(String key)
+    public FunctionDefinition defineFunction(String key, List<String> parameterNames)
     {
         IExpression prev = functionDefinitionMap.get(key);
 
         if (prev == null)
         {
-            FunctionDefinition def = new FunctionDefinition().markDefined();
+            FunctionDefinition def = new FunctionDefinition().markDefined(parameterNames);
             functionDefinitionMap.put(key, def);
             return def;
         }
@@ -35,7 +36,7 @@ public class FunctionRepository
             throw new PreeterCompileError(String.format("Tried to re-define an existing function: %s", key));
         }
 
-        return ((FunctionDefinition) prev).markDefined();
+        return ((FunctionDefinition) prev).markDefined(parameterNames);
     }
 
     public IFunctionDefinition getFunction(String key)

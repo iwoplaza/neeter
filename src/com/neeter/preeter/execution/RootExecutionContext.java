@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class RootExecutionContext extends BaseExecutionContext
 {
-    private final Map<String, Object> globalVariables = new HashMap<>();
+    private final Map<String, Variable> globalVariables = new HashMap<>();
 
     public RootExecutionContext(FunctionRepository functionRepository, StringBuilder outputBuilder)
     {
@@ -22,7 +22,7 @@ public class RootExecutionContext extends BaseExecutionContext
         {
             throw new PreeterRuntimeError(String.format("Tried to redeclare variable %s in the same scope.", key));
         }
-        this.globalVariables.put(key, value);
+        this.globalVariables.put(key, new Variable(value));
     }
 
     @Override
@@ -32,7 +32,7 @@ public class RootExecutionContext extends BaseExecutionContext
 
         if (this.globalVariables.containsKey(key))
         {
-            this.globalVariables.put(key, value);
+            this.globalVariables.get(key).setValue(value);
         }
         else
         {
@@ -47,7 +47,7 @@ public class RootExecutionContext extends BaseExecutionContext
 
         if (this.globalVariables.containsKey(key))
         {
-            return this.globalVariables.get(key);
+            return this.globalVariables.get(key).getValue();
         }
         else
         {
