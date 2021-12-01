@@ -2,7 +2,13 @@ package com.neeter;
 
 import com.neeter.grammar.NeeterLexer;
 import com.neeter.grammar.NeeterParser;
+import com.neeter.grammar.PreeterLexer;
+import com.neeter.grammar.PreeterParser;
 import com.neeter.html.HTMLGenerator;
+import com.neeter.preeter.FunctionRepository;
+import com.neeter.preeter.PreeterEngine;
+import com.neeter.preeter.PreeterListener;
+import com.neeter.preeter.PreeterRuntimeError;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -18,7 +24,28 @@ public class Main
 {
     private static String processPreeter(CharStream charStream)
     {
+        // Collecting tokens
+        PreeterLexer lexer = new PreeterLexer(charStream);
 
+        // Parsing
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        PreeterParser parser = new PreeterParser(tokens);
+        ParseTree tree = parser.program();
+
+        // Walking the tree
+        ParseTreeWalker walker = new ParseTreeWalker();
+        FunctionRepository functionRepository = new FunctionRepository();
+        functionRepository.defineBuiltInFunction("show", context -> {
+            context.getArgs().forEach(arg -> context.getOutputBuilder().append(arg.toString()));
+            return null;
+        });
+        PreeterListener listener = new PreeterListener(functionRepository);
+
+        walker.walk(listener, tree);
+
+        // Interpreting the language
+        PreeterEngine engine = new PreeterEngine(functionRepository);
+        return engine.executeNodes(listener.getNodes());
     }
 
     private static NeeterListener parseNeeter(String neeterCode)
@@ -72,7 +99,19 @@ public class Main
             return;
         }
 
-        NeeterListener listener = parseNeeter(programArguments.getCharStream().toString());
+        String neeter = "";
+        try
+        {
+            neeter = processPreeter(programArguments.getCharStream());
+        }
+        catch (PreeterRuntimeError e)
+        {
+            System.err.println("Failed to execute Preeter. Reason: ");
+            System.err.println("-- " + e.getMessage());
+            return;
+        }
+
+        NeeterListener listener = parseNeeter(neeter);
         if (listener == null)
             return;
 

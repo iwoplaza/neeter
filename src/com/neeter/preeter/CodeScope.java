@@ -8,22 +8,9 @@ import com.neeter.preeter.statement.IStatement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FunctionDefinition implements ICodeScope, IFunctionDefinition
+public class CodeScope implements ICodeScope
 {
-    private boolean defined = false;
     private final List<IStatement> statements = new ArrayList<>();
-
-    public FunctionDefinition markDefined()
-    {
-        defined = true;
-        return this;
-    }
-
-    @Override
-    public boolean isDefined()
-    {
-        return defined;
-    }
 
     @Override
     public void addStatement(IStatement statement)
@@ -40,8 +27,6 @@ public class FunctionDefinition implements ICodeScope, IFunctionDefinition
     @Override
     public Object evaluate(IExecutionContext context)
     {
-        // TODO Return a value
-
         for (IStatement statement : statements)
         {
             statement.run(context);
