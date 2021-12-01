@@ -13,13 +13,10 @@
     - [x] Code scopes
     - [ ] Conditional statement (equivalent to if)
     - [ ] Loop / iteration (equivalent of for / while)
-
-- [ ] Silnik:
     - [ ]  User-friendly error messages
+
+- [ ] Silnik: 
 
 - [ ] Optional:
     - [ ] Additional stylings per scope
     - [ ] Declaring new style classes
-
-
-
