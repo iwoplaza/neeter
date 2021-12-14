@@ -1,6 +1,7 @@
 package com.neeter.html;
 
 import com.neeter.*;
+import com.neeter.document.*;
 
 import java.util.HashMap;
 import java.util.Map;

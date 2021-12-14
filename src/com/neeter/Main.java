@@ -1,5 +1,7 @@
 package com.neeter;
 
+import com.neeter.document.NeeterListener;
+import com.neeter.document.StyleScope;
 import com.neeter.grammar.NeeterLexer;
 import com.neeter.grammar.NeeterParser;
 import com.neeter.grammar.PreeterLexer;
@@ -9,6 +11,7 @@ import com.neeter.preeter.FunctionRepository;
 import com.neeter.preeter.PreeterEngine;
 import com.neeter.preeter.PreeterListener;
 import com.neeter.preeter.PreeterRuntimeError;
+import com.neeter.watcher.Watcher;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -16,8 +19,10 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Collection;
 
 public class Main
@@ -86,23 +91,14 @@ public class Main
         return listener;
     }
 
-    public static void main(String[] args)
+    public static void generateOutput(File inputFile, File outputFile) throws IOException
     {
-        ProgramArguments programArguments;
-        try
-        {
-            programArguments = new ProgramArguments(args);
-        }
-        catch (IllegalArgumentException | IOException e)
-        {
-            System.err.println("Invalid usage. " + e.getMessage());
-            return;
-        }
+        CharStream charStream = CharStreams.fromFileName(inputFile.getPath(), Charset.defaultCharset());
 
         String neeter = "";
         try
         {
-            neeter = processPreeter(programArguments.getCharStream());
+            neeter = processPreeter(charStream);
         }
         catch (PreeterRuntimeError e)
         {
@@ -120,13 +116,70 @@ public class Main
         HTMLGenerator htmlGenerator = new HTMLGenerator(rootScope, listener.getClassRepository());
         String output = htmlGenerator.generate();
 
-        try (BufferedWriter f = new BufferedWriter(new FileWriter(programArguments.getOutputFile("html"))))
+        try (BufferedWriter f = new BufferedWriter(new FileWriter(outputFile)))
         {
             f.write(output);
         }
         catch (IOException e)
         {
             e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args)
+    {
+        ProgramArguments programArguments;
+        try
+        {
+            programArguments = new ProgramArguments(args);
+        }
+        catch (IllegalArgumentException | IOException e)
+        {
+            System.err.println("Invalid usage. " + e.getMessage());
+            return;
+        }
+
+        File inputFile = programArguments.getInputFile();
+        File outputFile = programArguments.getOutputFile("html");
+
+        try
+        {
+            generateOutput(inputFile, outputFile);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        if (programArguments.getFlags().contains("watch"))
+        {
+            // Starting watch...
+            System.out.println(String.format("Starting to watch \"%s\"", inputFile.getName()));
+            try
+            {
+                Watcher watcher = Watcher.watchFile(inputFile, (filename) -> {
+                    if (inputFile.getName().startsWith(filename))
+                    {
+                        System.out.println("File changed. Recompiling...");
+                        try
+                        {
+                            generateOutput(inputFile, outputFile);
+                        }
+                        catch (IOException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                Thread watchThread = new Thread(watcher);
+
+                watchThread.start();
+                watchThread.join();
+            }
+            catch (IOException | InterruptedException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.neeter;
+package com.neeter.document;
 
 import com.neeter.grammar.NeeterBaseListener;
 import com.neeter.grammar.NeeterParser;

@@ -12,7 +12,10 @@
     - Function calls [DONE]
     - Code scopes [DONE]
 
-- Silnik Preeter
+- Preeter Engine
+    - Passing variables by value/ref
+    - While loop
+    - If statement
 
 Optional:
     - Additional stylings per scope

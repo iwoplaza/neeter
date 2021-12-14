@@ -1,4 +1,4 @@
-package com.neeter;
+package com.neeter.document;
 
 public interface IContentNode
 {

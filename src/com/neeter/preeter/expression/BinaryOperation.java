@@ -1,8 +1,9 @@
 package com.neeter.preeter.expression;
 
+import com.neeter.preeter.ICodeScope;
 import com.neeter.preeter.execution.IExecutionContext;
 
-public class BinaryOperation implements IExpression, IExpressionHost
+public class BinaryOperation implements ICodeScope
 {
     private final EvaluationFunction evaluationFunction;
     private IExpression leftSide;

@@ -1,4 +1,4 @@
-package com.neeter;
+package com.neeter.document;
 
 import java.util.HashMap;
 import java.util.Map;

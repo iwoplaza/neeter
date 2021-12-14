@@ -1,15 +1,15 @@
 package com.neeter.preeter.expression;
 
+import com.neeter.preeter.ICodeScope;
 import com.neeter.preeter.IFunctionDefinition;
 import com.neeter.preeter.PreeterRuntimeError;
 import com.neeter.preeter.execution.IExecutionContext;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FunctionCall implements IExpression, IExpressionHost
+public class FunctionCall implements ICodeScope
 {
     private final String id;
     private List<IExpression> argumentExpressions = new ArrayList<>();

@@ -1,10 +1,9 @@
-package com.neeter.preeter.statement;
+package com.neeter.preeter.expression;
 
+import com.neeter.preeter.ICodeScope;
 import com.neeter.preeter.execution.IExecutionContext;
-import com.neeter.preeter.expression.IExpression;
-import com.neeter.preeter.expression.IExpressionHost;
 
-public class VariableAssignment implements IStatement, IExpressionHost
+public class VariableAssignment implements ICodeScope
 {
     private final String id;
     private final boolean declaration;
@@ -38,7 +37,7 @@ public class VariableAssignment implements IStatement, IExpressionHost
     }
 
     @Override
-    public void run(IExecutionContext context)
+    public Object evaluate(IExecutionContext context)
     {
         Object value = null;
         if (valueExpression != null)
@@ -54,5 +53,7 @@ public class VariableAssignment implements IStatement, IExpressionHost
         {
             context.setVariable(id, value);
         }
+
+        return value;
     }
 }
