@@ -32,6 +32,7 @@ PLUS: '+';
 MINUS: '-';
 STAR: '*';
 FRONT_SLASH: '/';
+MODULO: '%';
 WHITESPACE : (SPACES | NEWLINE_CHAR) -> skip;
 STRING_LITERAL: '"' ~('"')* '"';
 INT_LITERAL: [0-9]+;

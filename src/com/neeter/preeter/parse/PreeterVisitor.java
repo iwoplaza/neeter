@@ -1,21 +1,19 @@
-package com.neeter.preeter;
+package com.neeter.preeter.parse;
 
 import com.neeter.grammar.PreeterParser;
 import com.neeter.grammar.PreeterParserBaseVisitor;
+import com.neeter.preeter.*;
 import com.neeter.preeter.expression.*;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.RuleNode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 import java.util.stream.Collectors;
 
-public class PreeterVisitor extends PreeterParserBaseVisitor<PreeterVisitor.Result>
+public class PreeterVisitor extends PreeterParserBaseVisitor<IExpression>
 {
     private final FunctionRepository functionRepository;
     private final List<IPreeterNode> nodes = new ArrayList<>();
-    private Stack<ICodeScope> scopeStack = new Stack<>();
 
     public PreeterVisitor(FunctionRepository functionRepository)
     {
@@ -28,194 +26,178 @@ public class PreeterVisitor extends PreeterParserBaseVisitor<PreeterVisitor.Resu
     }
 
     @Override
-    public Result visitCodeSnippet(PreeterParser.CodeSnippetContext ctx)
+    public IExpression visitCodeSnippet(PreeterParser.CodeSnippetContext ctx)
     {
-        PreeterCodeNode codeNode = new PreeterCodeNode();
-        nodes.add(codeNode);
+        // Visiting each function definition.
+        ctx.funcDef().forEach(this::visit);
 
-        scopeStack.push(codeNode);
-        visitChildren(ctx);
-        scopeStack.pop();
+        List<IExpression> statements = ctx.instruction().stream().map(this::visit).collect(Collectors.toList());
+        nodes.add(new PreeterCodeNode(statements));
 
         return null;
     }
 
     @Override
-    public Result visitContent(PreeterParser.ContentContext ctx)
+    public IExpression visitContent(PreeterParser.ContentContext ctx)
     {
         PreeterTextNode textNode = new PreeterTextNode(ctx.getText());
         nodes.add(textNode);
 
-        // Should have no children
         return null;
     }
 
     @Override
-    public Result visitFuncDef(PreeterParser.FuncDefContext ctx)
+    public IExpression visitFuncDef(PreeterParser.FuncDefContext ctx)
     {
         String funcId = ctx.ID().getText();
 
         List<String> parameterNames = ctx.idList().ID().stream().map(ParseTree::getText).collect(Collectors.toList());
-        FunctionDefinition def = functionRepository.defineFunction(funcId, parameterNames);
 
-        scopeStack.push(def);
-        visitChildren(ctx);
-        scopeStack.pop();
+        List<IExpression> statements = ctx.instruction().stream().map(this::visit).collect(Collectors.toList());
+        functionRepository.defineFunction(funcId, parameterNames, statements);
 
         return null;
     }
 
     @Override
-    public Result visitVarAssignment(PreeterParser.VarAssignmentContext ctx)
+    public IExpression visitVarDeclaration(PreeterParser.VarDeclarationContext ctx)
     {
-        VariableAssignment variableDeclaration = new VariableAssignment(ctx.varId.getText(), false);
-        scopeStack.peek().receiveExpression(variableDeclaration);
-
-        scopeStack.push(variableDeclaration);
-        visitChildren(ctx);
-        scopeStack.pop();
-
-        return null;
+        return new VariableAssignment(ctx.varId.getText(), true, visit(ctx.expr()));
     }
 
     @Override
-    public Result visitLiteralExpr(PreeterParser.LiteralExprContext ctx)
+    public IExpression visitVarAssignment(PreeterParser.VarAssignmentContext ctx)
     {
-        assert(scopeStack.peek() != null);
+        return new VariableAssignment(ctx.varId.getText(), false, visit(ctx.expr()));
+    }
 
+    @Override
+    public IExpression visitCodeScope(PreeterParser.CodeScopeContext ctx)
+    {
+        List<IExpression> statements = ctx.instruction().stream().map(this::visit).collect(Collectors.toList());
+
+        return new CodeScope(statements);
+    }
+
+    @Override
+    public IExpression visitWhileStatement(PreeterParser.WhileStatementContext ctx)
+    {
+        IExpression conditionExpression = visit(ctx.condition);
+        List<IExpression> statements = ctx.statementBody().instruction().stream().map(this::visit).collect(Collectors.toList());
+
+        return new WhileLoop(conditionExpression, statements);
+    }
+
+    @Override
+    public IExpression visitIfStatement(PreeterParser.IfStatementContext ctx)
+    {
+        IExpression conditionExpression = visit(ctx.condition);
+        List<IExpression> statements = ctx.mainBody.instruction().stream().map(this::visit).collect(Collectors.toList());
+        List<IExpression> elseStatements = null;
+
+        if (ctx.elseBody != null)
+        {
+            elseStatements = ctx.elseBody.instruction().stream().map(this::visit).collect(Collectors.toList());
+        }
+
+        return new IfStatement(conditionExpression, statements, elseStatements);
+    }
+
+    @Override
+    public IExpression visitLiteralExpr(PreeterParser.LiteralExprContext ctx)
+    {
         if (ctx.literal().INT_LITERAL() != null)
         {
-            scopeStack.peek().receiveExpression(new LiteralExpression(Integer.parseInt(ctx.literal().INT_LITERAL().getText())));
+            return new LiteralExpression(Integer.parseInt(ctx.literal().INT_LITERAL().getText()));
         }
         else if (ctx.literal().STRING_LITERAL() != null)
         {
             String text = ctx.literal().STRING_LITERAL().getText();
             text = LiteralHelper.processStringLiteral(text);
-            scopeStack.peek().receiveExpression(new LiteralExpression(text));
-        }
-        else
-        {
-            throw new PreeterCompileError(String.format("Found literal of unsupported type: %s", ctx.getText()));
+            return new LiteralExpression(text);
         }
 
-        return null;
+        throw new PreeterCompileError(String.format("Found literal of unsupported type: %s", ctx.getText()));
     }
 
     @Override
-    public Result visitIdentifierExpr(PreeterParser.IdentifierExprContext ctx)
+    public IExpression visitIdentifierExpr(PreeterParser.IdentifierExprContext ctx)
     {
-        IdentifierExpression op = new IdentifierExpression(ctx.getText());
-        scopeStack.peek().receiveExpression(op);
-
-        return null;
+        return new IdentifierExpression(ctx.getText());
     }
 
     @Override
-    public Result visitCodeScope(PreeterParser.CodeScopeContext ctx)
+    public IExpression visitBoundExpr(PreeterParser.BoundExprContext ctx)
     {
-        return handleExpressionHost(ctx, new CodeScope());
+        return visit(ctx.expr());
     }
 
     @Override
-    public Result visitWhileStatement(PreeterParser.WhileStatementContext ctx)
+    public IExpression visitMultiplyExpr(PreeterParser.MultiplyExprContext ctx)
     {
-        return handleExpressionHost(ctx, new WhileLoop());
+        return new BinaryOperation(Operations.MULTIPLY, visit(ctx.expr(0)), visit(ctx.expr(1)));
     }
 
     @Override
-    public Result visitIfStatement(PreeterParser.IfStatementContext ctx)
+    public IExpression visitAddExpr(PreeterParser.AddExprContext ctx)
     {
-        IfStatement statement = new IfStatement();
-        scopeStack.peek().receiveExpression(statement);
-
-        
-        visit(ctx.expr());
-
-        scopeStack.push(statement);
-        visitChildren(ctx);
-        scopeStack.pop();
-
-        return null;
+        return new BinaryOperation(Operations.ADD, visit(ctx.expr(0)), visit(ctx.expr(1)));
     }
 
     @Override
-    public Result visitVarDeclaration(PreeterParser.VarDeclarationContext ctx)
+    public IExpression visitSubtractExpr(PreeterParser.SubtractExprContext ctx)
     {
-        return handleExpressionHost(ctx, new VariableAssignment(ctx.varId.getText(), true));
+        return new BinaryOperation(Operations.SUBTRACT, visit(ctx.expr(0)), visit(ctx.expr(1)));
     }
 
     @Override
-    public Result visitMultiplyExpr(PreeterParser.MultiplyExprContext ctx)
+    public IExpression visitDivideExpr(PreeterParser.DivideExprContext ctx)
     {
-        return handleExpressionHost(ctx, new BinaryOperation(Operations.MULTIPLY));
+        return new BinaryOperation(Operations.DIVIDE, visit(ctx.expr(0)), visit(ctx.expr(1)));
     }
 
     @Override
-    public Result visitAddExpr(PreeterParser.AddExprContext ctx)
+    public IExpression visitModExpr(PreeterParser.ModExprContext ctx)
     {
-        return handleExpressionHost(ctx, new BinaryOperation(Operations.ADD));
+        return new BinaryOperation(Operations.MODULO, visit(ctx.expr(0)), visit(ctx.expr(1)));
     }
 
     @Override
-    public Result visitSubtractExpr(PreeterParser.SubtractExprContext ctx)
+    public IExpression visitEqExpr(PreeterParser.EqExprContext ctx)
     {
-        return handleExpressionHost(ctx, new BinaryOperation(Operations.SUBTRACT));
+        return new BinaryOperation(Operations.EQUALS, visit(ctx.expr(0)), visit(ctx.expr(1)));
     }
 
     @Override
-    public Result visitDivideExpr(PreeterParser.DivideExprContext ctx)
+    public IExpression visitMoreEqExpr(PreeterParser.MoreEqExprContext ctx)
     {
-        return handleExpressionHost(ctx, new BinaryOperation(Operations.DIVIDE));
+        return new BinaryOperation(Operations.MORE_EQUAL, visit(ctx.expr(0)), visit(ctx.expr(1)));
     }
 
     @Override
-    public Result visitEqExpr(PreeterParser.EqExprContext ctx)
+    public IExpression visitLessEqExpr(PreeterParser.LessEqExprContext ctx)
     {
-        return handleExpressionHost(ctx, new BinaryOperation(Operations.EQUALS));
+        return new BinaryOperation(Operations.LESS_EQUAL, visit(ctx.expr(0)), visit(ctx.expr(1)));
     }
 
     @Override
-    public Result visitMoreEqExpr(PreeterParser.MoreEqExprContext ctx)
+    public IExpression visitMoreExpr(PreeterParser.MoreExprContext ctx)
     {
-        return handleExpressionHost(ctx, new BinaryOperation(Operations.MORE_EQUAL));
+        return new BinaryOperation(Operations.MORE_THAN, visit(ctx.expr(0)), visit(ctx.expr(1)));
     }
 
     @Override
-    public Result visitLessEqExpr(PreeterParser.LessEqExprContext ctx)
+    public IExpression visitLessExpr(PreeterParser.LessExprContext ctx)
     {
-        return handleExpressionHost(ctx, new BinaryOperation(Operations.LESS_EQUAL));
+        return new BinaryOperation(Operations.LESS_THAN, visit(ctx.expr(0)), visit(ctx.expr(1)));
     }
 
     @Override
-    public Result visitMoreExpr(PreeterParser.MoreExprContext ctx)
+    public IExpression visitFuncCallExpr(PreeterParser.FuncCallExprContext ctx)
     {
-        return handleExpressionHost(ctx, new BinaryOperation(Operations.MORE_THAN));
-    }
+        List<IExpression> argumentList = ctx.funcCall().valueList().expr().stream()
+                .map(this::visit).collect(Collectors.toList());
 
-    @Override
-    public Result visitLessExpr(PreeterParser.LessExprContext ctx)
-    {
-        return handleExpressionHost(ctx, new BinaryOperation(Operations.LESS_THAN));
-    }
-
-    @Override
-    public Result visitFuncCallExpr(PreeterParser.FuncCallExprContext ctx)
-    {
-        return handleExpressionHost(ctx, new FunctionCall(ctx.funcCall().ID().getText()));
-    }
-
-    private <T extends RuleNode> Result handleExpressionHost(T ctx, ICodeScope expression)
-    {
-        scopeStack.peek().receiveExpression(expression);
-
-        scopeStack.push(expression);
-        visitChildren(ctx);
-        scopeStack.pop();
-
-        return null;
-    }
-
-    public static class Result
-    {
+        return new FunctionCall(ctx.funcCall().ID().getText(), argumentList);
     }
 }

@@ -3,23 +3,23 @@ package com.neeter.preeter;
 import com.neeter.preeter.execution.IExecutionContext;
 import com.neeter.preeter.expression.IExpression;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class FunctionDefinition implements ICodeScope, IFunctionDefinition
+public class FunctionDefinition implements IExpression, IFunctionDefinition
 {
     private boolean defined = false;
     private List<String> parameterNames;
-    private final List<IExpression> statements = new ArrayList<>();
+    private List<IExpression> statements = null;
 
     public FunctionDefinition()
     {
     }
 
-    public FunctionDefinition markDefined(List<String> parameterNames)
+    public FunctionDefinition markDefined(List<String> parameterNames, List<IExpression> statements)
     {
         this.defined = true;
         this.parameterNames = parameterNames;
+        this.statements = statements;
         return this;
     }
 
@@ -33,11 +33,6 @@ public class FunctionDefinition implements ICodeScope, IFunctionDefinition
     public List<String> getNamedParameters()
     {
         return parameterNames;
-    }
-    @Override
-    public void receiveExpression(IExpression expression)
-    {
-        statements.add(expression);
     }
 
     @Override

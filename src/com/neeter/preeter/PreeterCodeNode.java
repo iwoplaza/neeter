@@ -3,17 +3,15 @@ package com.neeter.preeter;
 import com.neeter.preeter.execution.IExecutionContext;
 import com.neeter.preeter.expression.IExpression;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class PreeterCodeNode implements IPreeterNode, ICodeScope
+public class PreeterCodeNode implements IPreeterNode, IExpression
 {
-    private final List<IExpression> statements = new ArrayList<>();
+    private final List<IExpression> statements;
 
-    @Override
-    public void receiveExpression(IExpression expression)
+    public PreeterCodeNode(List<IExpression> statements)
     {
-        statements.add(expression);
+        this.statements = statements;
     }
 
     @Override

@@ -9,8 +9,8 @@ import com.neeter.grammar.PreeterParser;
 import com.neeter.html.HTMLGenerator;
 import com.neeter.preeter.FunctionRepository;
 import com.neeter.preeter.PreeterEngine;
-import com.neeter.preeter.PreeterListener;
 import com.neeter.preeter.PreeterRuntimeError;
+import com.neeter.preeter.parse.PreeterVisitor;
 import com.neeter.watcher.Watcher;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -37,20 +37,18 @@ public class Main
         PreeterParser parser = new PreeterParser(tokens);
         ParseTree tree = parser.program();
 
-        // Walking the tree
-        ParseTreeWalker walker = new ParseTreeWalker();
+        // Visiting the tree
         FunctionRepository functionRepository = new FunctionRepository();
         functionRepository.defineBuiltInFunction("show", context -> {
             context.getArgs().forEach(arg -> context.getOutputBuilder().append(arg.toString()));
             return null;
         });
-        PreeterListener listener = new PreeterListener(functionRepository);
-
-        walker.walk(listener, tree);
+        PreeterVisitor visitor = new PreeterVisitor(functionRepository);
+        tree.accept(visitor);
 
         // Interpreting the language
         PreeterEngine engine = new PreeterEngine(functionRepository);
-        return engine.executeNodes(listener.getNodes());
+        return engine.executeNodes(visitor.getNodes());
     }
 
     private static NeeterListener parseNeeter(String neeterCode)

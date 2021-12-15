@@ -15,13 +15,13 @@ public class FunctionRepository
         functionDefinitionMap.put(key, def);
     }
 
-    public FunctionDefinition defineFunction(String key, List<String> parameterNames)
+    public FunctionDefinition defineFunction(String key, List<String> parameterNames, List<IExpression> statements)
     {
         IExpression prev = functionDefinitionMap.get(key);
 
         if (prev == null)
         {
-            FunctionDefinition def = new FunctionDefinition().markDefined(parameterNames);
+            FunctionDefinition def = new FunctionDefinition().markDefined(parameterNames, statements);
             functionDefinitionMap.put(key, def);
             return def;
         }
@@ -36,7 +36,7 @@ public class FunctionRepository
             throw new PreeterCompileError(String.format("Tried to re-define an existing function: %s", key));
         }
 
-        return ((FunctionDefinition) prev).markDefined(parameterNames);
+        return ((FunctionDefinition) prev).markDefined(parameterNames, statements);
     }
 
     public IFunctionDefinition getFunction(String key)

@@ -1,27 +1,26 @@
 package com.neeter.preeter.expression;
 
-import com.neeter.preeter.ICodeScope;
-import com.neeter.preeter.PreeterRuntimeError;
 import com.neeter.preeter.execution.IExecutionContext;
 import com.neeter.util.ValueHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class IfStatement implements ICodeScope
+public class IfStatement implements IExpression
 {
     private final IExpression conditionExpression;
-    private final List<IExpression> statements = new ArrayList<>();
+    private final List<IExpression> statements;
+    private final List<IExpression> elseExpressions;
 
-    public IfStatement(IExpression conditionExpression)
+    public IfStatement(IExpression conditionExpression, List<IExpression> statements, List<IExpression> elseExpressions)
     {
         this.conditionExpression = conditionExpression;
+        this.statements = statements;
+        this.elseExpressions = elseExpressions;
     }
 
-    @Override
-    public void receiveExpression(IExpression expression)
+    public IfStatement(IExpression conditionExpression, List<IExpression> statements)
     {
-        statements.add(expression);
+        this(conditionExpression, statements, null);
     }
 
     @Override
@@ -30,6 +29,13 @@ public class IfStatement implements ICodeScope
         if (ValueHelper.requireTruthy(conditionExpression.evaluate(context)))
         {
             for (IExpression statement : statements)
+            {
+                statement.evaluate(context);
+            }
+        }
+        else if (elseExpressions != null)
+        {
+            for (IExpression statement : elseExpressions)
             {
                 statement.evaluate(context);
             }

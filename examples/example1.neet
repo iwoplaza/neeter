@@ -21,10 +21,31 @@ Here are the results of our findings:
         print_formula("x / y", x / y);
     }
     print_formula("old x", x);
+    fizzbuzz(20);
 @}
 
 @{
     def print_formula(label, value) {
         show("{{", label, " = ", value, "}}\n\n");
+    }
+
+    def fizzbuzz(n) {
+        let i = 1;
+        while (i < n) {
+            if ((i % 15) == 0) {
+                show("Fizz Buzz", "\n\n");
+            }
+            else if ((i % 3) == 0) {
+                show("Fizz", "\n\n");
+            }
+            else if ((i % 5) == 0)
+            {
+                show("Buzz", "\n\n");
+            }
+            else {
+                show(i, "\n\n");
+            }
+            i=i+1;
+        }
     }
 @}

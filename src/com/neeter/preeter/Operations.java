@@ -41,6 +41,7 @@ public class Operations
 
         return ValueHelper.requireInt(aValue) / ValueHelper.requireInt(bValue);
     };
+    public static final BinaryOperation.EvaluationFunction MODULO =     (c, a, b) -> ValueHelper.requireInt(a.evaluate(c)) % ValueHelper.requireInt(b.evaluate(c));
     public static final BinaryOperation.EvaluationFunction EQUALS =     (c, a, b) -> a.evaluate(c).equals(b.evaluate(c));
     public static final BinaryOperation.EvaluationFunction LESS_THAN =  (c, a, b) -> ValueHelper.lessThan(a.evaluate(c), b.evaluate(c));
     public static final BinaryOperation.EvaluationFunction LESS_EQUAL = (c, a, b) -> ValueHelper.lessOrEqual(a.evaluate(c), b.evaluate(c));

@@ -1,18 +1,18 @@
 package com.neeter.preeter.expression;
 
-import com.neeter.preeter.ICodeScope;
 import com.neeter.preeter.execution.IExecutionContext;
 
-public class VariableAssignment implements ICodeScope
+public class VariableAssignment implements IExpression
 {
     private final String id;
     private final boolean declaration;
-    private IExpression valueExpression = null;
+    private final IExpression valueExpression;
 
-    public VariableAssignment(String id, boolean declaration)
+    public VariableAssignment(String id, boolean declaration, IExpression valueExpression)
     {
         this.id = id;
         this.declaration = declaration;
+        this.valueExpression = valueExpression;
     }
 
     public String getId()
@@ -28,12 +28,6 @@ public class VariableAssignment implements ICodeScope
     public IExpression getValueExpression()
     {
         return valueExpression;
-    }
-
-    @Override
-    public void receiveExpression(IExpression expression)
-    {
-        valueExpression = expression;
     }
 
     @Override

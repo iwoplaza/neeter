@@ -1,22 +1,21 @@
 package com.neeter.preeter.expression;
 
-import com.neeter.preeter.ICodeScope;
 import com.neeter.preeter.IFunctionDefinition;
 import com.neeter.preeter.PreeterRuntimeError;
 import com.neeter.preeter.execution.IExecutionContext;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FunctionCall implements ICodeScope
+public class FunctionCall implements IExpression
 {
     private final String id;
-    private List<IExpression> argumentExpressions = new ArrayList<>();
+    private List<IExpression> argumentExpressions;
 
-    public FunctionCall(String id)
+    public FunctionCall(String id, List<IExpression> argumentExpressions)
     {
         this.id = id;
+        this.argumentExpressions = argumentExpressions;
     }
 
     @Override
@@ -52,11 +51,5 @@ public class FunctionCall implements ICodeScope
         }
 
         return expression.evaluate(functionContext);
-    }
-
-    @Override
-    public void receiveExpression(IExpression expression)
-    {
-        argumentExpressions.add(expression);
     }
 }
