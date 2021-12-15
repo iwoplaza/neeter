@@ -4,6 +4,7 @@ import com.neeter.grammar.PreeterParser;
 import com.neeter.grammar.PreeterParserBaseListener;
 import com.neeter.preeter.expression.*;
 import com.neeter.preeter.expression.VariableAssignment;
+import com.neeter.util.ValueHelper;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
@@ -78,6 +79,34 @@ public class PreeterListener extends PreeterParserBaseListener
     }
 
     @Override
+    public void enterWhileStatement(PreeterParser.WhileStatementContext ctx)
+    {
+        WhileLoop whileLoop = new WhileLoop();
+        scopeStack.peek().receiveExpression(whileLoop);
+        scopeStack.push(whileLoop);
+    }
+
+    @Override
+    public void exitWhileStatement(PreeterParser.WhileStatementContext ctx)
+    {
+        scopeStack.pop();
+    }
+
+    @Override
+    public void enterIfStatement(PreeterParser.IfStatementContext ctx)
+    {
+        IfStatement ifStatement = new IfStatement(null);
+        scopeStack.peek().receiveExpression(ifStatement);
+        scopeStack.push(ifStatement);
+    }
+
+    @Override
+    public void exitIfStatement(PreeterParser.IfStatementContext ctx)
+    {
+        scopeStack.pop();
+    }
+
+    @Override
     public void enterVarDeclaration(PreeterParser.VarDeclarationContext ctx)
     {
         VariableAssignment variableDeclaration = new VariableAssignment(ctx.varId.getText(), true);
@@ -136,7 +165,7 @@ public class PreeterListener extends PreeterParserBaseListener
     @Override
     public void enterMultiplyExpr(PreeterParser.MultiplyExprContext ctx)
     {
-        BinaryOperation op = new BinaryOperation((c, a, b) -> (int)a.evaluate(c) * (int)b.evaluate(c));
+        BinaryOperation op = new BinaryOperation(Operations.MULTIPLY);
         scopeStack.peek().receiveExpression(op);
         scopeStack.push(op);
     }
@@ -150,7 +179,7 @@ public class PreeterListener extends PreeterParserBaseListener
     @Override
     public void enterAddExpr(PreeterParser.AddExprContext ctx)
     {
-        BinaryOperation op = new BinaryOperation((c, a, b) -> (int)a.evaluate(c) + (int)b.evaluate(c));
+        BinaryOperation op = new BinaryOperation(Operations.ADD);
         scopeStack.peek().receiveExpression(op);
         scopeStack.push(op);
     }
@@ -164,7 +193,7 @@ public class PreeterListener extends PreeterParserBaseListener
     @Override
     public void enterSubtractExpr(PreeterParser.SubtractExprContext ctx)
     {
-        BinaryOperation op = new BinaryOperation((c, a, b) -> (int)a.evaluate(c) - (int)b.evaluate(c));
+        BinaryOperation op = new BinaryOperation(Operations.SUBTRACT);
         scopeStack.peek().receiveExpression(op);
         scopeStack.push(op);
     }
@@ -178,13 +207,83 @@ public class PreeterListener extends PreeterParserBaseListener
     @Override
     public void enterDivideExpr(PreeterParser.DivideExprContext ctx)
     {
-        BinaryOperation op = new BinaryOperation((c, a, b) -> (int)a.evaluate(c) / (int)b.evaluate(c));
+        BinaryOperation op = new BinaryOperation(Operations.DIVIDE);
         scopeStack.peek().receiveExpression(op);
         scopeStack.push(op);
     }
 
     @Override
     public void exitDivideExpr(PreeterParser.DivideExprContext ctx)
+    {
+        scopeStack.pop();
+    }
+
+    @Override
+    public void enterEqExpr(PreeterParser.EqExprContext ctx)
+    {
+        BinaryOperation op = new BinaryOperation(Operations.EQUALS);
+        scopeStack.peek().receiveExpression(op);
+        scopeStack.push(op);
+    }
+
+    @Override
+    public void exitEqExpr(PreeterParser.EqExprContext ctx)
+    {
+        scopeStack.pop();
+    }
+
+    @Override
+    public void enterMoreEqExpr(PreeterParser.MoreEqExprContext ctx)
+    {
+        BinaryOperation op = new BinaryOperation(Operations.MORE_EQUAL);
+        scopeStack.peek().receiveExpression(op);
+        scopeStack.push(op);
+    }
+
+    @Override
+    public void exitMoreEqExpr(PreeterParser.MoreEqExprContext ctx)
+    {
+        scopeStack.pop();
+    }
+
+    @Override
+    public void enterLessEqExpr(PreeterParser.LessEqExprContext ctx)
+    {
+        BinaryOperation op = new BinaryOperation(Operations.LESS_EQUAL);
+        scopeStack.peek().receiveExpression(op);
+        scopeStack.push(op);
+    }
+
+    @Override
+    public void exitLessEqExpr(PreeterParser.LessEqExprContext ctx)
+    {
+        scopeStack.pop();
+    }
+
+    @Override
+    public void enterMoreExpr(PreeterParser.MoreExprContext ctx)
+    {
+        BinaryOperation op = new BinaryOperation(Operations.MORE_THAN);
+        scopeStack.peek().receiveExpression(op);
+        scopeStack.push(op);
+    }
+
+    @Override
+    public void exitMoreExpr(PreeterParser.MoreExprContext ctx)
+    {
+        scopeStack.pop();
+    }
+
+    @Override
+    public void enterLessExpr(PreeterParser.LessExprContext ctx)
+    {
+        BinaryOperation op = new BinaryOperation(Operations.LESS_THAN);
+        scopeStack.peek().receiveExpression(op);
+        scopeStack.push(op);
+    }
+
+    @Override
+    public void exitLessExpr(PreeterParser.LessExprContext ctx)
     {
         scopeStack.pop();
     }

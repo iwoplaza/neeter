@@ -9,8 +9,17 @@ CODE_START: '@{' -> mode(CODE);
 
 mode CODE;
 
+EQUALS: '==';
+LESS_OR_EQ: '<=';
+LESS_THAN: '<';
+MORE_OR_EQ: '>=';
+MORE_THAN: '>';
+
 DEF: 'def';
 LET: 'let';
+WHILE: 'while';
+IF: 'if';
+ELSE: 'else';
 ID: ID_ITEM+;
 OPEN_PAREN: '(';
 CLOSE_PAREN: ')';
@@ -18,7 +27,7 @@ OPEN_BRACE: '{';
 CLOSE_BRACE: '}';
 SEMICOLON: ';';
 COMMA: ',';
-EQUALS: '=';
+ASSIGN: '=';
 PLUS: '+';
 MINUS: '-';
 STAR: '*';

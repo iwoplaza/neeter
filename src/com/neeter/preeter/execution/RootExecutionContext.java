@@ -58,22 +58,12 @@ public class RootExecutionContext extends BaseExecutionContext
     @Override
     public IExecutionContext createFunctionCall()
     {
-        ExecutionContext newContext = new ExecutionContext(functionRepository, outputBuilder);
-
-        newContext.args = this.args;
-        newContext.globalVariables.putAll(this.globalVariables);
-
-        return newContext;
+        return new ExecutionContext(functionRepository, outputBuilder, this.globalVariables);
     }
 
     @Override
     public IExecutionContext createDeeperScope()
     {
-        ExecutionContext newContext = new ExecutionContext(functionRepository, outputBuilder);
-
-        newContext.args = this.args;
-        newContext.globalVariables.putAll(this.globalVariables);
-
-        return newContext;
+        return new ExecutionContext(functionRepository, outputBuilder, this.globalVariables);
     }
 }

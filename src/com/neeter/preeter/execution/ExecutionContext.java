@@ -8,13 +8,19 @@ import java.util.Map;
 
 public class ExecutionContext extends BaseExecutionContext
 {
-    final Map<String, Variable> globalVariables = new HashMap<>();
+    final Map<String, Variable> globalVariables;
     final Map<String, Variable> parentVariables = new HashMap<>();
     final Map<String, Variable> variables = new HashMap<>();
 
-    public ExecutionContext(FunctionRepository functionRepository, StringBuilder outputBuilder)
+    public ExecutionContext(FunctionRepository functionRepository, StringBuilder outputBuilder, Map<String, Variable> globalVariables)
     {
         super(functionRepository, outputBuilder);
+        this.globalVariables = globalVariables;
+    }
+
+    public ExecutionContext(FunctionRepository functionRepository, StringBuilder outputBuilder)
+    {
+        this(functionRepository, outputBuilder, new HashMap<>());
     }
 
     @Override
@@ -76,21 +82,15 @@ public class ExecutionContext extends BaseExecutionContext
     @Override
     public IExecutionContext createFunctionCall()
     {
-        ExecutionContext newContext = new ExecutionContext(functionRepository, outputBuilder);
-
-        newContext.args = this.args;
-        newContext.globalVariables.putAll(this.globalVariables);
-
-        return newContext;
+        return new ExecutionContext(functionRepository, outputBuilder, this.globalVariables);
     }
 
     @Override
     public IExecutionContext createDeeperScope()
     {
-        ExecutionContext newContext = new ExecutionContext(functionRepository, outputBuilder);
+        ExecutionContext newContext = new ExecutionContext(functionRepository, outputBuilder, this.globalVariables);
 
         newContext.args = this.args;
-        newContext.globalVariables.putAll(this.globalVariables);
         newContext.parentVariables.putAll(this.parentVariables);
         newContext.parentVariables.putAll(this.variables);
 
