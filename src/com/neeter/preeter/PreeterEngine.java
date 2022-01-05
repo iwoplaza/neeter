@@ -1,6 +1,5 @@
 package com.neeter.preeter;
 
-import com.neeter.preeter.execution.ExecutionContext;
 import com.neeter.preeter.execution.RootExecutionContext;
 
 import java.util.List;
