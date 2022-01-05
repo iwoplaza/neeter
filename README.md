@@ -1,5 +1,22 @@
 # NEETER
 
+# INSTALACJA
+
+#### 1. ANTLR
+- Pobranie ANTLR (antlr-4.9.3-complete.jar) https://www.antlr.org/download/
+- Import biblioteki w Intellij ProjectStructure -> import ../antlr-4.9.3-complete.jar
+- Pobranie ANTLR plugin https://github.com/antlr/antlr4/blob/master/doc/getting-started.md
+- Import w Intellij Settings -> Plugins -> Install Plugin from Disk
+- 
+#### 2. Ustawienie lokalizacji, w której będą generowane pliki języka
+![img.png](img/antlr_configure.png)
+![img_1.png](img/antlr_path.png)
+
+#### 3. Generujemy pliki języka
+![img.png](img/antlr_generate.png)
+
+#### 4. Punkty 2 i 3 powtarzamy dla PreeterLexer.g4 i PreeterParser.g4
+
 ## TODO:
 - [x] Napisanie gramatyki Neeter:
     - [x] Formulas and text
