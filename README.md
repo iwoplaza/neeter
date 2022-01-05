@@ -23,7 +23,7 @@ W celu edycji kodu żródłowego niezbędny będzie import kilku bibliotek.
     - Pobranie ANTLR plugin https://github.com/antlr/antlr4/blob/master/doc/getting-started.md
     - Import w Intellij Settings -> Plugins -> Install Plugin from Disk <br/><br/>
 
-2. Ustawienie lokalizacji, w której będą generowane pliki języka
+2. Ustawienie lokalizacji, w której będą generowane pliki języka <br/>
    ![img.png](img/antlr_configure.png)
    ![img_1.png](img/antlr_path.png)
 
