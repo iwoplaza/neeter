@@ -37,7 +37,7 @@ Simple formula: {{x = 1 + 2 + 4 + ... + 128}}.
 @}
 #h1 { ♻️ Test 3 - Recursive functions}
 @{
-    print_bounded("bounded hello", 5);
+    print_bounded("bounded hello", 5, false);
 @}
 #h1 { 👀 Test 4 - Operator precedence}
 @{
@@ -56,14 +56,13 @@ Simple formula: {{x = 1 + 2 + 4 + ... + 128}}.
     def fizzbuzz(n) {
         let i = 1;
         while (i < n) {
-            if (i % 15 == 0) {
+            if (i % 3 == 0) {
                 show("Fizz Buzz", "\n\n");
             }
             else if (i % 3 == 0) {
                 show("Fizz", "\n\n");
             }
-            else if (i % 5 == 0)
-            {
+            else if (i % 5 == 0) {
                 show("Buzz", "\n\n");
             }
             else {
@@ -73,14 +72,18 @@ Simple formula: {{x = 1 + 2 + 4 + ... + 128}}.
         }
     }
 
-    def print_bounded(value, n) {
+    def print_bounded(value, n, square) {
         if (n > 0) {
             show("(");
-            print_bounded(value, n - 1);
+            print_bounded(value, n - 1, square);
             show(")");
         }
         else {
             show(value);
+
+            if (square) {
+                show("^2");
+            }
         }
     }
 @}

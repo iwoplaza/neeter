@@ -1,14 +1,15 @@
 package com.neeter.preeter.expression;
 
 import com.neeter.preeter.execution.IExecutionContext;
+import com.neeter.preeter.parse.DocContext;
 
 public class LiteralExpression extends ExpressionBase
 {
     private final Object value;
 
-    public LiteralExpression(int lineIndex, Object value)
+    public LiteralExpression(DocContext docContext, Object value)
     {
-        super(lineIndex);
+        super(docContext);
         this.value = value;
     }
 

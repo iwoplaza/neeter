@@ -112,18 +112,28 @@ public class PreeterVisitor extends PreeterParserBaseVisitor<IExpression>
     @Override
     public IExpression visitLiteralExpr(PreeterParser.LiteralExprContext ctx)
     {
+        DocContext docContext = DocContext.fromToken(ctx.start);
+
         if (ctx.literal().INT_LITERAL() != null)
         {
-            return new LiteralExpression(ctx.start.getLine(), Integer.parseInt(ctx.literal().INT_LITERAL().getText()));
+            return new LiteralExpression(docContext, Integer.parseInt(ctx.literal().INT_LITERAL().getText()));
         }
         else if (ctx.literal().STRING_LITERAL() != null)
         {
             String text = ctx.literal().STRING_LITERAL().getText();
             text = LiteralHelper.processStringLiteral(text);
-            return new LiteralExpression(ctx.start.getLine(), text);
+            return new LiteralExpression(docContext, text);
+        }
+        else if (ctx.literal().TRUE_LITERAL() != null)
+        {
+            return new LiteralExpression(docContext, true);
+        }
+        else if (ctx.literal().FALSE_LITERAL() != null)
+        {
+            return new LiteralExpression(docContext, false);
         }
 
-        throw new PreeterCompileError(String.format("Found literal of unsupported type: %s", ctx.getText()), DocContext.fromToken(ctx.start));
+        throw new PreeterCompileError(String.format("Found literal of unsupported type: %s", ctx.getText()), docContext);
     }
 
     @Override
@@ -196,6 +206,18 @@ public class PreeterVisitor extends PreeterParserBaseVisitor<IExpression>
     public IExpression visitLessExpr(PreeterParser.LessExprContext ctx)
     {
         return new BinaryOperation(DocContext.fromToken(ctx.start), Operations.LESS_THAN, visit(ctx.expr(0)), visit(ctx.expr(1)));
+    }
+
+    @Override
+    public IExpression visitAndExpr(PreeterParser.AndExprContext ctx)
+    {
+        return new BinaryOperation(DocContext.fromToken(ctx.start), Operations.AND, visit(ctx.expr(0)), visit(ctx.expr(1)));
+    }
+
+    @Override
+    public IExpression visitOrExpr(PreeterParser.OrExprContext ctx)
+    {
+        return new BinaryOperation(DocContext.fromToken(ctx.start), Operations.OR, visit(ctx.expr(0)), visit(ctx.expr(1)));
     }
 
     @Override

@@ -50,10 +50,12 @@ expr
   | expr '>' expr # MoreExpr
   | expr '>=' expr # MoreEqExpr
   | expr '==' expr # EqExpr
+  | expr '&&' expr # AndExpr
+  | expr '||' expr # OrExpr
   ;
 
 varAssignment: varId=ID '=' expr ';';
 funcCall: ID '(' valueList? ')' ';';
 idList: ID (',' ID)*;
 valueList: expr (',' expr)*;
-literal: STRING_LITERAL|INT_LITERAL;
+literal: STRING_LITERAL|INT_LITERAL|TRUE_LITERAL|FALSE_LITERAL;

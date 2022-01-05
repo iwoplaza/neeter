@@ -47,4 +47,8 @@ public class Operations
     public static final BinaryOperation.EvaluationFunction LESS_EQUAL = (c, a, b) -> ValueHelper.lessOrEqual(a.evaluate(c), b.evaluate(c));
     public static final BinaryOperation.EvaluationFunction MORE_THAN =  (c, a, b) -> ValueHelper.moreThan(a.evaluate(c), b.evaluate(c));
     public static final BinaryOperation.EvaluationFunction MORE_EQUAL = (c, a, b) -> ValueHelper.moreOrEqual(a.evaluate(c), b.evaluate(c));
+
+    // Boolean operations
+    public static final BinaryOperation.EvaluationFunction AND = (c, a, b) -> ValueHelper.requireTruthy(a.evaluate(c)) && ValueHelper.requireTruthy(b.evaluate(c));
+    public static final BinaryOperation.EvaluationFunction OR = (c, a, b) -> ValueHelper.requireTruthy(a.evaluate(c)) || ValueHelper.requireTruthy(b.evaluate(c));
 }

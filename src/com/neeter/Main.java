@@ -11,7 +11,6 @@ import com.neeter.preeter.FunctionRepository;
 import com.neeter.preeter.PreeterCompileError;
 import com.neeter.preeter.PreeterEngine;
 import com.neeter.preeter.PreeterRuntimeError;
-import com.neeter.preeter.parse.DocContext;
 import com.neeter.preeter.parse.PreeterVisitor;
 import com.neeter.watcher.Watcher;
 import org.antlr.v4.runtime.CharStream;
