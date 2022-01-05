@@ -1,6 +1,7 @@
 package com.neeter.preeter;
 
 import com.neeter.preeter.expression.IExpression;
+import com.neeter.preeter.parse.DocContext;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,28 +16,28 @@ public class FunctionRepository
         functionDefinitionMap.put(key, def);
     }
 
-    public FunctionDefinition defineFunction(String key, List<String> parameterNames, List<IExpression> statements)
+    public FunctionDefinition defineFunction(DocContext docContext, String key, List<String> parameterNames, List<IExpression> statements)
     {
         IExpression prev = functionDefinitionMap.get(key);
 
         if (prev == null)
         {
-            FunctionDefinition def = new FunctionDefinition().markDefined(parameterNames, statements);
+            FunctionDefinition def = new FunctionDefinition().markDefined(docContext, parameterNames, statements);
             functionDefinitionMap.put(key, def);
             return def;
         }
 
         if (!(prev instanceof FunctionDefinition))
         {
-            throw new PreeterCompileError(String.format("Tried to shadow built-in function: %s", key));
+            throw new PreeterCompileError(String.format("Tried to shadow built-in function: %s", key), docContext);
         }
 
         if (((FunctionDefinition) prev).isDefined())
         {
-            throw new PreeterCompileError(String.format("Tried to re-define an existing function: %s", key));
+            throw new PreeterCompileError(String.format("Tried to re-define an existing function: %s", key), docContext);
         }
 
-        return ((FunctionDefinition) prev).markDefined(parameterNames, statements);
+        return ((FunctionDefinition) prev).markDefined(docContext, parameterNames, statements);
     }
 
     public IFunctionDefinition getFunction(String key)

@@ -26,6 +26,7 @@ Simple formula: {{x = 1 + 2 + 4 + ... + 128}}.
         print_formula("x + y", x + y);
         print_formula("x * y", x * y);
         print_formula("x / y", x / y);
+        print_formula("x / 0", x / 1);
         show("{{END}}\n\n");
     }
     print_formula("x", x);

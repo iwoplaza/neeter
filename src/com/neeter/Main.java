@@ -8,8 +8,10 @@ import com.neeter.grammar.PreeterLexer;
 import com.neeter.grammar.PreeterParser;
 import com.neeter.html.HTMLGenerator;
 import com.neeter.preeter.FunctionRepository;
+import com.neeter.preeter.PreeterCompileError;
 import com.neeter.preeter.PreeterEngine;
 import com.neeter.preeter.PreeterRuntimeError;
+import com.neeter.preeter.parse.DocContext;
 import com.neeter.preeter.parse.PreeterVisitor;
 import com.neeter.watcher.Watcher;
 import org.antlr.v4.runtime.CharStream;
@@ -44,6 +46,7 @@ public class Main
             return null;
         });
         PreeterVisitor visitor = new PreeterVisitor(functionRepository);
+
         tree.accept(visitor);
 
         // Interpreting the language
@@ -101,7 +104,13 @@ public class Main
         catch (PreeterRuntimeError e)
         {
             System.err.println("Failed to execute Preeter. Reason: ");
-            System.err.println("-- " + e.getMessage());
+            System.err.println(String.format("[line %s] %s", e.getDocContext(), e.getMessage()));
+            return;
+        }
+        catch (PreeterCompileError error)
+        {
+            System.err.println("Failed to compile Preeter. Reason: ");
+            System.err.println(String.format("[line %s] %s", error.getDocContext(), error.getMessage()));
             return;
         }
 

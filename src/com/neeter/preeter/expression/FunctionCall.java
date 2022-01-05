@@ -3,17 +3,19 @@ package com.neeter.preeter.expression;
 import com.neeter.preeter.IFunctionDefinition;
 import com.neeter.preeter.PreeterRuntimeError;
 import com.neeter.preeter.execution.IExecutionContext;
+import com.neeter.preeter.parse.DocContext;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FunctionCall implements IExpression
+public class FunctionCall extends ExpressionBase
 {
     private final String id;
     private List<IExpression> argumentExpressions;
 
-    public FunctionCall(String id, List<IExpression> argumentExpressions)
+    public FunctionCall(DocContext docContext, String id, List<IExpression> argumentExpressions)
     {
+        super(docContext);
         this.id = id;
         this.argumentExpressions = argumentExpressions;
     }
@@ -25,7 +27,7 @@ public class FunctionCall implements IExpression
 
         if (expression == null || !expression.isDefined())
         {
-            throw new PreeterRuntimeError(String.format("Tried to call undefined function: %s", this.id));
+            throw new PreeterRuntimeError(String.format("Tried to call undefined function: %s", this.id), docContext);
         }
 
         // General argument values
@@ -39,7 +41,7 @@ public class FunctionCall implements IExpression
 
         if (parameterNames.size() > argValues.size())
         {
-            throw new PreeterRuntimeError(String.format("Function %s only takes %d arguments, %d given", this.id, parameterNames.size(), argValues.size()));
+            throw new PreeterRuntimeError(String.format("Function %s only takes %d arguments, %d given", this.id, parameterNames.size(), argValues.size()), docContext);
         }
 
         for (int i = 0; i < parameterNames.size(); ++i)

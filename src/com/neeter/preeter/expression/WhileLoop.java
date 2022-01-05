@@ -5,13 +5,14 @@ import com.neeter.util.ValueHelper;
 
 import java.util.List;
 
-public class WhileLoop implements IExpression
+public class WhileLoop extends ExpressionBase
 {
     private final IExpression conditionExpression;
     private final List<IExpression> statements;
 
-    public WhileLoop(IExpression conditionExpression, List<IExpression> statements)
+    public WhileLoop(int lineIndex, IExpression conditionExpression, List<IExpression> statements)
     {
+        super(lineIndex);
         this.conditionExpression = conditionExpression;
         this.statements = statements;
     }

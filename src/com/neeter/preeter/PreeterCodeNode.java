@@ -1,16 +1,18 @@
 package com.neeter.preeter;
 
 import com.neeter.preeter.execution.IExecutionContext;
+import com.neeter.preeter.expression.ExpressionBase;
 import com.neeter.preeter.expression.IExpression;
 
 import java.util.List;
 
-public class PreeterCodeNode implements IPreeterNode, IExpression
+public class PreeterCodeNode extends ExpressionBase implements IPreeterNode
 {
     private final List<IExpression> statements;
 
-    public PreeterCodeNode(List<IExpression> statements)
+    public PreeterCodeNode(int lineIndex, List<IExpression> statements)
     {
+        super(lineIndex);
         this.statements = statements;
     }
 

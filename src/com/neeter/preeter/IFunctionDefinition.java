@@ -1,6 +1,7 @@
 package com.neeter.preeter;
 
 import com.neeter.preeter.expression.IExpression;
+import com.neeter.preeter.parse.DocContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,5 +17,11 @@ public interface IFunctionDefinition extends IExpression
     default List<String> getNamedParameters()
     {
         return new ArrayList<>();
+    }
+
+    @Override
+    default DocContext getDocContext()
+    {
+        return null;
     }
 }

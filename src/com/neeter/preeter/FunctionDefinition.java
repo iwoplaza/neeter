@@ -1,11 +1,13 @@
 package com.neeter.preeter;
 
 import com.neeter.preeter.execution.IExecutionContext;
+import com.neeter.preeter.expression.ExpressionBase;
 import com.neeter.preeter.expression.IExpression;
+import com.neeter.preeter.parse.DocContext;
 
 import java.util.List;
 
-public class FunctionDefinition implements IExpression, IFunctionDefinition
+public class FunctionDefinition extends ExpressionBase implements IFunctionDefinition
 {
     private boolean defined = false;
     private List<String> parameterNames;
@@ -13,11 +15,13 @@ public class FunctionDefinition implements IExpression, IFunctionDefinition
 
     public FunctionDefinition()
     {
+        super(0);
     }
 
-    public FunctionDefinition markDefined(List<String> parameterNames, List<IExpression> statements)
+    public FunctionDefinition markDefined(DocContext docContext, List<String> parameterNames, List<IExpression> statements)
     {
         this.defined = true;
+        this.docContext = docContext;
         this.parameterNames = parameterNames;
         this.statements = statements;
         return this;

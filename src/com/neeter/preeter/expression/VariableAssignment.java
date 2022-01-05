@@ -2,14 +2,15 @@ package com.neeter.preeter.expression;
 
 import com.neeter.preeter.execution.IExecutionContext;
 
-public class VariableAssignment implements IExpression
+public class VariableAssignment extends ExpressionBase
 {
     private final String id;
     private final boolean declaration;
     private final IExpression valueExpression;
 
-    public VariableAssignment(String id, boolean declaration, IExpression valueExpression)
+    public VariableAssignment(int lineIndex, String id, boolean declaration, IExpression valueExpression)
     {
+        super(lineIndex);
         this.id = id;
         this.declaration = declaration;
         this.valueExpression = valueExpression;

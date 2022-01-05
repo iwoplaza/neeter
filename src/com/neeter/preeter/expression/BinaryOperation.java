@@ -1,15 +1,17 @@
 package com.neeter.preeter.expression;
 
 import com.neeter.preeter.execution.IExecutionContext;
+import com.neeter.preeter.parse.DocContext;
 
-public class BinaryOperation implements IExpression
+public class BinaryOperation extends ExpressionBase
 {
     private final EvaluationFunction evaluationFunction;
     private final IExpression leftSide;
     private final IExpression rightSide;
 
-    public BinaryOperation(EvaluationFunction evaluationFunction, IExpression leftSide, IExpression rightSide)
+    public BinaryOperation(DocContext docContext, EvaluationFunction evaluationFunction, IExpression leftSide, IExpression rightSide)
     {
+        super(docContext);
         this.evaluationFunction = evaluationFunction;
         this.leftSide = leftSide;
         this.rightSide = rightSide;
