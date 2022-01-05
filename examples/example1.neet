@@ -38,6 +38,14 @@ Simple formula: {{x = 1 + 2 + 4 + ... + 128}}.
 @{
     print_bounded("bounded hello", 5);
 @}
+#h1 { 👀 Test 4 - Operator precedence}
+@{
+    print_formula("4 + 5 * 2", 4 + 5 * 2);
+    print_formula("5 * 2 + 4", 5 * 2 + 4);
+
+    print_formula("(4 + 5) * 2", (4 + 5) * 2);
+    print_formula("5 * (2 + 4)", 5 * (2 + 4));
+@}
 
 @{
     def print_formula(label, value) {
