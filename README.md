@@ -1,10 +1,17 @@
-# NEETER
-Jest to język przeznaczony do formatowania tekstu. Został stworzony w celu jak uproszczonego tworzenia, formatowania tekstu i jego parametrów.
+## Table of contents
+* [Neeter](#neeter)
+* [Przykłady użycia](#przykłady-użycia)
+* [Technologie](#technologie)
+* [Zakres funkcjonalności](#zakres-funkcjonalności)
+* [Uruchomienie](#uruchomienie)
+
+## Neeter
+Jest to język przeznaczony do formatowania tekstu. Został stworzony w celu jak uproszczonego tworzenia, formatowania tekstu i jego parametrów. Jako wyjście generwoany jest odpowiednio sforamtowany plik name.html
+
+## Przykłady użycia
 
 ## Technologie
 - antlr-4.9.3-complete
-
-## Przykłady użycia
 
 ## Zakres funkcjonalności
 - zmienne (w tym zasięgi (scope) obowiązywania zmiennych)
@@ -35,4 +42,9 @@ W celu edycji kodu żródłowego niezbędny będzie import kilku bibliotek.
 5. Uruchom program z argumentem "examples/example1.neet"
 
 #### Uruchomienie
-    Po wygenerowaniu pliku .jar (lub jego pobraniu)...
+Po wygenerowaniu pliku .jar (lub jego pobraniu) uruchamiamy go, z argumentami:
+- input - nazwa pliku z kodem w neeter
+- output (opcjonalnie) - nazwa pliku wyjściowego 
+``` 
+neeter.jar input.neet output_name
+```
