@@ -1,42 +1,38 @@
 # NEETER
+Jest to język przeznaczony do formatowania tekstu. Został stworzony w celu jak uproszczonego tworzenia, formatowania tekstu i jego parametrów.
 
-# URUCHOMIENIE
+## Technologie
+- antlr-4.9.3-complete
 
-#### 1. ANTLR
-- Pobranie ANTLR (antlr-4.9.3-complete.jar) https://www.antlr.org/download/
-- Import biblioteki w Intellij ProjectStructure -> import ../antlr-4.9.3-complete.jar
-- Pobranie ANTLR plugin https://github.com/antlr/antlr4/blob/master/doc/getting-started.md
-- Import w Intellij Settings -> Plugins -> Install Plugin from Disk
+## Przykłady użycia
 
-#### 2. Ustawienie lokalizacji, w której będą generowane pliki języka
-![img.png](img/antlr_configure.png)
-![img_1.png](img/antlr_path.png)
+## Zakres funkcjonalności
+- zmienne (w tym zasięgi (scope) obowiązywania zmiennych)
+- operacje arytmetyczne za zmiennych
+- instrukcje warunkowe
+- pętle
+- funkcje (również rekurencyjne) 
+- komunikaty o błędach 
 
-#### 3. Generujemy pliki języka
-![img.png](img/antlr_generate.png)
+## Uruchomienie
+#### Import
+W celu edycji kodu żródłowego niezbędny będzie import kilku bibliotek.
+1. ANTLR
+    - Pobranie ANTLR (antlr-4.9.3-complete.jar) https://www.antlr.org/download/
+    - Import biblioteki w Intellij ProjectStructure -> import ../antlr-4.9.3-complete.jar
+    - Pobranie ANTLR plugin https://github.com/antlr/antlr4/blob/master/doc/getting-started.md
+    - Import w Intellij Settings -> Plugins -> Install Plugin from Disk <br/><br/>
 
-#### 4. Punkty 2 i 3 powtarzamy dla PreeterLexer.g4 i PreeterParser.g4
+2. Ustawienie lokalizacji, w której będą generowane pliki języka
+   ![img.png](img/antlr_configure.png)
+   ![img_1.png](img/antlr_path.png)
 
-## TODO:
-- [x] Napisanie gramatyki Neeter:
-    - [x] Formulas and text
-    - [x] Styles scopes (preset styles)
+3. Generujemy pliki języka <br/>
+   ![img.png](img/antlr_generate.png)
 
-- [ ] Napisanie gramatyki Preeter:
-    - [x] Variable declarations
-    - [x] Variable assignments
-    - [x] Function declarations
-    - [x] Function calls
-    - [x] Code scopes
-    - [ ] Conditional statement (equivalent to if)
-    - [ ] Loop / iteration (equivalent of for / while)
-    - [ ] User-friendly error messages
+4. Punkty 2 i 3 powtarzamy dla PreeterLexer.g4 i PreeterParser.g4
 
-- [ ] Preeter Engine: 
-    - [ ] Passing variables by value/ref
-    - [ ] While loop
-    - [ ] If statement
+5. Uruchom program z argumentem "examples/example1.neet"
 
-- [ ] Optional:
-    - [ ] Additional stylings per scope
-    - [ ] Declaring new style classes
+#### Uruchomienie
+    Po wygenerowaniu pliku .jar (lub jego pobraniu)...
