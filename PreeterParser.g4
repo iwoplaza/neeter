@@ -33,22 +33,23 @@ statementBody
     ;
 
 // Expressions
+// (Precedence goes from top to bottom)
 expr
   : ID # IdentifierExpr
   | literal # LiteralExpr
   | funcCall # FuncCallExpr
   | varAssignment # AssignExpr
   | '(' expr ')' # BoundExpr
-  | expr '+' expr # AddExpr
-  | expr '-' expr # SubtractExpr
   | expr '*' expr # MultiplyExpr
   | expr '/' expr # DivideExpr
   | expr '%' expr # ModExpr
-  | expr '==' expr # EqExpr
+  | expr '+' expr # AddExpr
+  | expr '-' expr # SubtractExpr
   | expr '<=' expr # LessEqExpr
   | expr '<' expr # LessExpr
   | expr '>' expr # MoreExpr
   | expr '>=' expr # MoreEqExpr
+  | expr '==' expr # EqExpr
   ;
 
 varAssignment: varId=ID '=' expr ';';
