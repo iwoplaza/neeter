@@ -1,0 +1,17 @@
+package com.neeter.preeter.execution;
+
+public class VariableError {
+
+    private static boolean hasErrorOccur = false;
+
+    VariableError() {
+    }
+
+    public static void setErrorOccur() {
+        hasErrorOccur = true;
+    }
+
+    public static boolean hasErrorOccur() {
+        return hasErrorOccur;
+    }
+}
