@@ -1,5 +1,7 @@
 package com.neeter.preeter.expression;
 
+import com.neeter.preeter.execution.BreakException;
+import com.neeter.preeter.execution.ContinueException;
 import com.neeter.preeter.execution.IExecutionContext;
 import com.neeter.util.ValueHelper;
 
@@ -20,12 +22,26 @@ public class WhileLoop extends ExpressionBase
     @Override
     public Object evaluate(IExecutionContext context)
     {
-        while (ValueHelper.requireTruthy(conditionExpression.evaluate(context)))
+        try
         {
-            for (IExpression statement : statements)
+            while (ValueHelper.requireTruthy(conditionExpression.evaluate(context)))
             {
-                statement.evaluate(context);
+                try
+                {
+                    for (IExpression statement : statements)
+                    {
+                        statement.evaluate(context);
+                    }
+                }
+                catch (ContinueException e)
+                {
+                    // Do nothing
+                }
             }
+        }
+        catch (BreakException e)
+        {
+            // Do nothing
         }
 
         return null;

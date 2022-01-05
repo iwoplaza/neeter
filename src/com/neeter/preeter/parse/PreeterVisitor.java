@@ -110,6 +110,27 @@ public class PreeterVisitor extends PreeterParserBaseVisitor<IExpression>
     }
 
     @Override
+    public IExpression visitReturnStatement(PreeterParser.ReturnStatementContext ctx)
+    {
+        PreeterParser.ExprContext exprContext = ctx.expr();
+        IExpression valueExpression = exprContext != null ? visit(exprContext) : null;
+
+        return new ReturnStatement(DocContext.fromToken(ctx.start), valueExpression);
+    }
+
+    @Override
+    public IExpression visitBreakStatement(PreeterParser.BreakStatementContext ctx)
+    {
+        return new BreakStatement(DocContext.fromToken(ctx.start));
+    }
+
+    @Override
+    public IExpression visitContinueStatement(PreeterParser.ContinueStatementContext ctx)
+    {
+        return new ContinueStatement(DocContext.fromToken(ctx.start));
+    }
+
+    @Override
     public IExpression visitLiteralExpr(PreeterParser.LiteralExprContext ctx)
     {
         DocContext docContext = DocContext.fromToken(ctx.start);

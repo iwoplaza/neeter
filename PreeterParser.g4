@@ -13,13 +13,13 @@ options {tokenVocab = PreeterLexer;}
 program: (content|codeSnippet)+ EOF;
 content: TEXT;
 codeSnippet: '@{' (funcDef|instruction)* '@}';
-instruction: statement|expr;
+instruction: statement|(expr ';');
 
 // Top-level code
 funcDef: 'def' ID '(' idList? ')' '{' instruction* '}';
 
 // Statements
-statement: codeScope|varDeclaration|whileStatement|ifStatement;
+statement: codeScope|varDeclaration|whileStatement|ifStatement|returnStatement|breakStatement|continueStatement;
 codeScope: '{' instruction* '}';
 varDeclaration: 'let' varId=ID ('=' expr)? ';';
 
@@ -31,13 +31,16 @@ statementBody
     : instruction
     | '{' instruction* '}'
     ;
+returnStatement: 'return' expr? ';';
+breakStatement: 'break' ';';
+continueStatement: 'continue' ';';
 
 // Expressions
 // (Precedence goes from top to bottom)
 expr
-  : ID # IdentifierExpr
+  : funcCall # FuncCallExpr
+  | ID # IdentifierExpr
   | literal # LiteralExpr
-  | funcCall # FuncCallExpr
   | varAssignment # AssignExpr
   | '(' expr ')' # BoundExpr
   | expr '*' expr # MultiplyExpr
@@ -54,8 +57,8 @@ expr
   | expr '||' expr # OrExpr
   ;
 
-varAssignment: varId=ID '=' expr ';';
-funcCall: ID '(' valueList? ')' ';';
+varAssignment: varId=ID '=' expr;
+funcCall: ID '(' valueList? ')';
 idList: ID (',' ID)*;
 valueList: expr (',' expr)*;
 literal: STRING_LITERAL|INT_LITERAL|TRUE_LITERAL|FALSE_LITERAL;

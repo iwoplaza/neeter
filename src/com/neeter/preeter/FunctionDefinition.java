@@ -1,6 +1,8 @@
 package com.neeter.preeter;
 
+import com.neeter.preeter.execution.BreakException;
 import com.neeter.preeter.execution.IExecutionContext;
+import com.neeter.preeter.execution.ReturnException;
 import com.neeter.preeter.expression.ExpressionBase;
 import com.neeter.preeter.expression.IExpression;
 import com.neeter.preeter.parse.DocContext;
@@ -42,11 +44,20 @@ public class FunctionDefinition extends ExpressionBase implements IFunctionDefin
     @Override
     public Object evaluate(IExecutionContext context)
     {
-        // TODO Return a value
-
-        for (IExpression statement : statements)
+        try
         {
-            statement.evaluate(context);
+            for (IExpression statement : statements)
+            {
+                statement.evaluate(context);
+            }
+        }
+        catch (ReturnException e)
+        {
+            return e.getReturnedValue();
+        }
+        catch (BreakException e)
+        {
+            // Do nothing
         }
 
         return null;
