@@ -1,6 +1,6 @@
 # NEETER
 
-# INSTALACJA
+# URUCHOMIENIE
 
 #### 1. ANTLR
 - Pobranie ANTLR (antlr-4.9.3-complete.jar) https://www.antlr.org/download/
