@@ -24,7 +24,7 @@ W celu edycji kodu żródłowego niezbędny będzie import kilku bibliotek.
     - Import w Intellij Settings -> Plugins -> Install Plugin from Disk <br/><br/>
 
 2. Ustawienie lokalizacji, w której będą generowane pliki języka <br/>
-   ![img.png](img/antlr_configure.png)
+   ![img.png](img/antlr_configure.png) <br/>
    ![img_1.png](img/antlr_path.png)
 
 3. Generujemy pliki języka <br/>
