@@ -1,4 +1,9 @@
-## Table of contents
+<h1 align="center"> Neeter </h1> <br>
+
+![img.png](img/neeter_logo.png)
+
+
+## Spis treści
 * [Neeter](#neeter)
 * [Przykłady użycia](#przykłady-użycia)
 * [Technologie](#technologie)
@@ -9,17 +14,96 @@
 Jest to język przeznaczony do formatowania tekstu. Został stworzony w celu jak uproszczonego tworzenia, formatowania tekstu i jego parametrów. Jako wyjście generwoany jest odpowiednio sforamtowany plik name.html
 
 ## Przykłady użycia
+Uruchamiając przykład z [example.neet](examples/example.neet) otrzymamy następny rezultat.
+<br/>
+![img_4.png](img/neeter_example.png)
 
 ## Technologie
 - antlr-4.9.3-complete
 
 ## Zakres funkcjonalności
+- scope na kod neeter
+```
+@{
+  // code
+@}
+```
+
 - zmienne (w tym zasięgi (scope) obowiązywania zmiennych)
+```
+let x = 5;
+```
+
+- typy zmiennych
+   - string
+   - int
+   - boolean
+  
+
 - operacje arytmetyczne za zmiennych
+```
+let x = 5;
+let y = (x + 5) % 2;
+```
+
 - instrukcje warunkowe
+```
+if (x % 2 == 0) {
+    show("even", "\n\n");
+}
+else if ((i % 2) != 0) {
+    show("odd", "\n\n");
+} 
+else {
+    show("?", "\n\n");
+}
+```
+
 - pętle
-- funkcje (również rekurencyjne) 
-- komunikaty o błędach 
+```
+while (i < n) {
+    // code
+}
+```
+
+- funkcje (również rekurencyjne)
+```
+def helloNeeter(n, ...) {
+    // code
+}
+
+helloNeeter(n, ...)
+```
+
+```
+def hello(n) {
+    show("Hello Neeter", "\n\n");
+            
+    if (n > 0) {
+        hello(n-1);
+    }
+}
+```
+
+- wbudowane funkcje
+```
+show();
+```
+
+- kolor tesktu
+```
+
+```
+
+- formatowanie dla formuł matematycznych
+```
+{{x = 1 + 2 + 4 + ... + 128}}
+```
+
+- komunikaty o błędach
+
+
+
 
 ## Uruchomienie
 #### Import
@@ -42,9 +126,9 @@ W celu edycji kodu żródłowego niezbędny będzie import kilku bibliotek.
 5. Uruchom program z argumentem "examples/example1.neet"
 
 #### Uruchomienie
-Po wygenerowaniu pliku .jar (lub jego pobraniu) uruchamiamy go, z argumentami:
+Uruchomienie pliku .jar z następującymi argumentami
 - input - nazwa pliku z kodem w neeter
 - output (opcjonalnie) - nazwa pliku wyjściowego 
 ``` 
-neeter.jar input.neet output_name
+java -jar neeter.jar "path\input.neet" "path\output_name"
 ```
