@@ -7,7 +7,7 @@
 - Import biblioteki w Intellij ProjectStructure -> import ../antlr-4.9.3-complete.jar
 - Pobranie ANTLR plugin https://github.com/antlr/antlr4/blob/master/doc/getting-started.md
 - Import w Intellij Settings -> Plugins -> Install Plugin from Disk
-- 
+
 #### 2. Ustawienie lokalizacji, w której będą generowane pliki języka
 ![img.png](img/antlr_configure.png)
 ![img_1.png](img/antlr_path.png)
