@@ -1,7 +1,7 @@
 #title {
     #strong {Example Neeter Document} - Iwo Plaza & Krzysztof Faracik
 }
-#h1 { Intro }
+#h1[color=#00ff00] { Intro }
 
 This is an example document showcasing the features of #strong{Neeter}.
 This language is designed to be #strong { simple } and #strong { efficient }.

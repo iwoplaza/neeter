@@ -1,7 +1,8 @@
 package com.neeter.document;
 
-import com.neeter.grammar.NeeterBaseListener;
 import com.neeter.grammar.NeeterParser;
+import com.neeter.grammar.NeeterParserBaseListener;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class NeeterListener extends NeeterBaseListener
+public class NeeterListener extends NeeterParserBaseListener
 {
     private final List<String> errors = new ArrayList<>();
 
@@ -64,32 +65,62 @@ public class NeeterListener extends NeeterBaseListener
     @Override
     public void enterStyleScope(NeeterParser.StyleScopeContext ctx)
     {
-        NeeterParser.StyleClassContext classContext = ctx.styleClass();
+        Token styleClassToken = ctx.styleClass;
+        NeeterParser.StyleDescriptionContext descriptionContext = ctx.styleDescription();
 
-        if (classContext != null)
+        StyleScope scope;
+
+        if (styleClassToken != null)
         {
-            String classKey = classContext.WORD().getText();
+            String classKey = styleClassToken.getText();
             StyleClass styleClass = classRepository.getStyleClass(classKey);
 
             if (styleClass == null)
             {
                 errors.add(String.format("Missing style class: '%s'", classKey));
+                return;
             }
-            else
-            {
-                StyleScope scope = new StyleScope(styleClass, this.currentScope);
-                this.currentScope.addChildNode(scope);
-                this.currentScope = scope;
-            }
+
+            scope = new StyleScope(styleClass, this.currentScope);
         }
         else
         {
-            StyleScope scope = new StyleScope(null, this.currentScope);
-            this.currentScope.addChildNode(scope);
-            this.currentScope = scope;
-
-            errors.add("Classless style scope unsupported");
+            scope = new StyleScope(null, this.currentScope);
         }
+
+        if (descriptionContext != null)
+        {
+            for (NeeterParser.StylePropertyContext propContext : descriptionContext.styleProperty())
+            {
+                StylableProperty prop;
+                String propKey = propContext.propKey.getText().toUpperCase();
+                try
+                {
+                    prop = StylableProperty.valueOf(propKey);
+                }
+                catch(IllegalArgumentException e)
+                {
+                    errors.add(String.format("Unknown property style: %s", propKey));
+                    return;
+                }
+
+                if (propContext.idValue != null)
+                {
+                    scope.setProperty(prop, propContext.idValue.getText());
+                }
+                else if (propContext.colorValue != null)
+                {
+                    scope.setProperty(prop, Integer.parseInt(propContext.colorValue.getText().substring(1), 16));
+                }
+                else if (propContext.intValue != null)
+                {
+                    scope.setProperty(prop, Integer.parseInt(propContext.intValue.getText()));
+                }
+            }
+        }
+
+        this.currentScope.addChildNode(scope);
+        this.currentScope = scope;
     }
 
     @Override

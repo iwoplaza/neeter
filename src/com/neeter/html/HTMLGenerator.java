@@ -12,7 +12,7 @@ public class HTMLGenerator
     static
     {
         PROPERTY_PARSER_MAP.put(StylableProperty.SIZE, value -> String.format("font-size: %dpx", (int) value));
-        PROPERTY_PARSER_MAP.put(StylableProperty.COLOR, value -> String.format("color: #%05X", (int) value));
+        PROPERTY_PARSER_MAP.put(StylableProperty.COLOR, value -> String.format("color: #%06X", (int) value));
         PROPERTY_PARSER_MAP.put(StylableProperty.STANDALONE, value -> String.format("display: %s", value.equals(true) ? "block" : "inline"));
         PROPERTY_PARSER_MAP.put(StylableProperty.ALIGNMENT, value -> String.format("text-align: %s", value));
         PROPERTY_PARSER_MAP.put(StylableProperty.WEIGHT, value -> String.format("font-weight: %s", (int) value));
@@ -57,6 +57,14 @@ public class HTMLGenerator
             {
                 stringBuilder.append("<span class=\"neet-class-");
                 stringBuilder.append(styleClass.getKey());
+                stringBuilder.append("\" style=\"");
+
+                for (Map.Entry<StylableProperty, Object> prop : scopeNode.getProperties())
+                {
+                    stringBuilder.append(PROPERTY_PARSER_MAP.get(prop.getKey()).stringify(prop.getValue()));
+                    stringBuilder.append("; ");
+                }
+
                 stringBuilder.append("\">");
             }
 
