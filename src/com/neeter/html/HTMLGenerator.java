@@ -52,31 +52,27 @@ public class HTMLGenerator
         {
             StyleScope scopeNode = (StyleScope) node;
 
+            // <span ...
             StyleClass styleClass = scopeNode.getAppliedClass();
-            if (styleClass != null)
+            stringBuilder.append("<span class=\"neet-class-");
+            stringBuilder.append(styleClass != null ? styleClass.getKey() : "default");
+            stringBuilder.append("\" style=\"");
+            // >
+
+            for (Map.Entry<StylableProperty, Object> prop : scopeNode.getProperties())
             {
-                stringBuilder.append("<span class=\"neet-class-");
-                stringBuilder.append(styleClass.getKey());
-                stringBuilder.append("\" style=\"");
-
-                for (Map.Entry<StylableProperty, Object> prop : scopeNode.getProperties())
-                {
-                    stringBuilder.append(PROPERTY_PARSER_MAP.get(prop.getKey()).stringify(prop.getValue()));
-                    stringBuilder.append("; ");
-                }
-
-                stringBuilder.append("\">");
+                stringBuilder.append(PROPERTY_PARSER_MAP.get(prop.getKey()).stringify(prop.getValue()));
+                stringBuilder.append("; ");
             }
+
+            stringBuilder.append("\">");
 
             for (IContentNode childNode : scopeNode.getChildren())
             {
                 generateNode(childNode, stringBuilder);
             }
 
-            if (styleClass != null)
-            {
-                stringBuilder.append("</span>");
-            }
+            stringBuilder.append("</span>");
 
             stringBuilder.append(" ");
         }

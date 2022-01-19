@@ -190,6 +190,10 @@ public class Main
             {
                 e.printStackTrace();
             }
+            catch (IllegalArgumentException e)
+            {
+                System.err.println(e.getMessage());
+            }
         }
     }
 }

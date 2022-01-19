@@ -1,5 +1,5 @@
 #title {
-    #strong {Example Neeter Document} - Iwo Plaza & Krzysztof Faracik
+    #strong[color=#ff0000] {Example Neeter Document} - Iwo Plaza & Krzysztof Faracik
 }
 #h1[size=40, color=#00ddaa, alignment=left, weight=800] { Intro }
 
@@ -42,6 +42,7 @@ Simple formula: {{x = 1 + 2 + 4 + ... + 128}}.
 #h1 { 👀 Test 4 - Operator precedence}
 @{
     print_formula("4 + 5 * 2", 4 + 5 * 2);
+    print_formula("4 + 5 * 2 + 3", 4 + 5 * 2 + 3);
     print_formula("5 * 2 + 4", 5 * 2 + 4);
 
     print_formula("(4 + 5) * 2", (4 + 5) * 2);
@@ -56,6 +57,23 @@ Simple formula: {{x = 1 + 2 + 4 + ... + 128}}.
         i = i + 1;
     }
 @}
+
+#h1 { Test 6 - Silnia }
+Silnia 5:
+@{
+    show(silnia_r(5));
+    show("\n\n");
+    show(silnia(5));
+@}
+
+#h1 { Test 7 - Boolean }
+and(false, false) @{ show(and(false, false)); @}
+
+and(false, true) @{ show(and(false, true)); @}
+
+and(true, true) @{ show(and(true, true)); @}
+
+and(true, false) @{ show(and(true, false)); @}
 
 @{
     def print_formula(label, value) {
@@ -103,5 +121,28 @@ Simple formula: {{x = 1 + 2 + 4 + ... + 128}}.
         }
 
         return fib(n - 1) + fib(n - 2);
+    }
+
+    def silnia_r(liczba) {
+        if (liczba <= 2) {
+            return liczba;
+        }
+
+        return liczba * silnia_r(liczba-1);
+    }
+
+    def silnia(liczba) {
+        let silnia = 1;
+        let i = 2;
+        while (i <= liczba) {
+            silnia = silnia * i;
+            i = i + 1;
+        }
+
+        return silnia;
+    }
+
+    def and(a, b) {
+        return (a && b) == false;
     }
 @}

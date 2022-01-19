@@ -1,0 +1,29 @@
+#title[alignment=left] { Below are grayscale hellos }
+
+@{
+    let i = 0;
+    while (i < 10) {
+        print_brightness("Hello", i);
+        i = i + 1;
+    }
+@}
+
+@{
+
+def print_brightness(content, brightness) {
+    show("#[color=#");
+
+    let i = 0;
+    while (i < 6) {
+        show(brightness);
+        i = i + 1;
+    }
+
+    show(", size=", brightness * 3 + 16);
+
+    show("] {");
+    show(content, "\n\n");
+    show("}");
+}
+
+@}

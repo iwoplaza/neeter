@@ -79,6 +79,11 @@ public class Watcher implements Runnable
     {
         WatchService watcher = FileSystems.getDefault().newWatchService();
 
+        if (file.getParent() == null)
+        {
+            throw new IllegalArgumentException("Please provide either a proper relative path (./inputFile.neet), or an absolute filepath.");
+        }
+
         Path dir = Paths.get(file.getParent());
         dir.register(watcher, ENTRY_MODIFY);
 

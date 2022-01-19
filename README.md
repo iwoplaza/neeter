@@ -2,15 +2,25 @@
 
 ## Spis treści
 * [Neeter](#neeter)
+* [Uruchomienie](#uruchomienie)
+* [Język proceduralny Preeter](#język-proceduralny-preeter)
 * [Przykłady użycia](#przykłady-użycia)
 * [Technologie](#technologie)
 * [Zakres funkcjonalności](#zakres-funkcjonalności)
-* [Uruchomienie](#uruchomienie)
+* [Development](#development)
 
 ## Neeter
 Jest to język przeznaczony do opisu dokumentów w sposób ogólny, dający możliwość proceduralnego generowania zawartości. Środowisko Neeter przetwarza dokument zapisany w naszym języku i generuje dokument w formacie gotowym do wyświetlenia.
 
 Jako podstawowy format wyjściowy użyliśmy dokumentów HTML. Środowisko jest tak przygotowane, że rozszerzenie procesu generacji do innych popularnych formatów (np. `svg` lub `pdf`) nie sprawia problemów.
+
+## Uruchomienie
+Uruchomienie pliku .jar z następującymi argumentami
+- input - nazwa pliku z kodem w Neeter
+- watch (opcjonalne) - obserwuje i kompiluje po każdej zmianie pliku wejściowego (widzimy rezultat w czasie rzeczywistym)
+``` 
+java -jar neeter.jar ./path/to/inputFile.neet [-watch]
+```
 
 ## Język proceduralny Preeter
 Neeter, podobnie jak język PHP, pozwala na osadzanie kawałków kodu imperatywnego pomiędzy treść dokumentu. Nazywamy ten mini-język "Preeter" (pre-neeter). Wynikiem przetwarzania kodu Preeter jest zawartość zapisana w języku Neeter. Poniższy diagram pokazuje proces przetwarzania kodu źródłowego na dokumenty docelowe.
@@ -104,7 +114,13 @@ def fib(n) {
     - `show(5 + 6)`
     - `show("Some", " words", " are concatinated")`
 
-### Parametry tekstu
+### Style scopes
+```
+#klasa[parametr1=wartość1, parametr2=wartość2, ..., parametrN=wartośćN] {
+    ...Zawartość dokumentu
+}
+
+```
   - rozmiar tesktu w px
   ```
   [size=10]
@@ -135,7 +151,7 @@ def fib(n) {
 {{x = 1 + 2 + 4 + ... + 128}}
 ```
 
-## Uruchomienie
+## Development
 #### Import
 W celu edycji kodu żródłowego niezbędny będzie import kilku bibliotek.
 1. ANTLR
@@ -154,10 +170,3 @@ W celu edycji kodu żródłowego niezbędny będzie import kilku bibliotek.
 4. Punkty 2 i 3 powtarzamy dla PreeterLexer.g4 i PreeterParser.g4
 
 5. Uruchom program z argumentem "examples/example1.neet"
-
-#### Uruchomienie
-Uruchomienie pliku .jar z następującymi argumentami
-- input - nazwa pliku z kodem w neeter
-``` 
-java -jar neeter.jar "path\input.neet"
-```
