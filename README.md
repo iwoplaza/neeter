@@ -1,8 +1,5 @@
 <h1 align="center"> Neeter </h1> <br>
 
-![img.png](img/neeter_logo.png)
-
-
 ## Spis treści
 * [Neeter](#neeter)
 * [Przykłady użycia](#przykłady-użycia)
@@ -11,45 +8,58 @@
 * [Uruchomienie](#uruchomienie)
 
 ## Neeter
-Jest to język przeznaczony do formatowania tekstu. Został stworzony w celu uproszczonego tworzenia, formatowania tekstu i jego parametrów. Jako wyjście generwoany jest odpowiednio sforamtowany plik name.html. Środowisko jest tak przygotowane, że możemy zmienić format pliku wyjściowego i otrzymać `svg` lub `pdf`.
-<br/>
+Jest to język przeznaczony do opisu dokumentów w sposób ogólny, dający możliwość proceduralnego generowania zawartości. Środowisko Neeter przetwarza dokument zapisany w naszym języku i generuje dokument w formacie gotowym do wyświetlenia.
+
+Jako podstawowy format wyjściowy użyliśmy dokumentów HTML. Środowisko jest tak przygotowane, że rozszerzenie procesu generacji do innych popularnych formatów (np. `svg` lub `pdf`) nie sprawia problemów.
+
+## Język proceduralny Preeter
+Neeter, podobnie jak język PHP, pozwala na osadzanie kawałków kodu imperatywnego pomiędzy treść dokumentu. Nazywamy ten mini-język "Preeter" (pre-neeter). Wynikiem przetwarzania kodu Preeter jest zawartość zapisana w języku Neeter. Poniższy diagram pokazuje proces przetwarzania kodu źródłowego na dokumenty docelowe.
+
+<br>
+
 ![img_5.png](img/neeter_diagram.png)
 
 
 ## Przykłady użycia
-Uruchamiając przykład z [example.neet](examples/example.neet) otrzymamy następny rezultat.
+Uruchamiając przykład z [examples/example1.neet](examples/example1.neet) otrzymamy następujący rezultat.
 <br/>
+
 ![img_4.png](img/neeter_example.png)
 
 ## Technologie
-- antlr-4.9.3-complete
+- Java 8
+- Antlr 4.9.3
 
 ## Zakres funkcjonalności
-- scope na kod neeter
+### Generowanie zawartości dzięki wstawek Preeter
 ```
+Zawartość dokumentu. 
 @{
-  // code
+  // To jest komentarz
+  show("Zawartość generowana proceduralnie: ", 56 / 2, ". ");
 @}
+Dalsza zawartość dokumentu.
 ```
 
-- zmienne (w tym zasięgi (scope) obowiązywania zmiennych)
+### Zmienne (w tym zasięgi obowiązywania zmiennych)
 ```
 let x = 5;
+let content = "Hello";
+let isGood = false;
 ```
-
-- typy zmiennych
+- Typy zmiennych
    - string
    - int
    - boolean
-  
 
-- operacje arytmetyczne za zmiennych
+### Operacje arytmetyczne
 ```
 let x = 5;
 let y = (x + 5) % 2;
+let z = (x * 5) / 2;
 ```
 
-- instrukcje warunkowe
+### Instrukcje warunkowe
 ```
 if (x % 2 == 0) {
     show("even", "\n\n");
@@ -62,14 +72,14 @@ else {
 }
 ```
 
-- pętle
+### Pętla while
 ```
 while (i < n) {
     // code
 }
 ```
 
-- funkcje (również rekurencyjne)
+### Funkcje (również rekurencyjne)
 ```
 def helloNeeter(n, ...) {
     // code
@@ -88,25 +98,16 @@ def fib(n) {
 }
 ```
 
-- wbudowane funkcje
-```
-show();
-```
+### Wbudowane funkcje:
+- show - Przyjmuje dowolną liczbę argumentów, wypisuje każdy z nich do zawartości dokumentu w kolejności występowania na liście parametrów. Przykłady:
+    - `show("Hello", 5)`
+    - `show(5 + 6)`
+    - `show("Some", " words", " are concatinated")`
 
-- kolor tesktu
-```
-
-```
-
-- formatowanie dla formuł matematycznych
+### Formatowanie dla formuł matematycznych
 ```
 {{x = 1 + 2 + 4 + ... + 128}}
 ```
-
-- komunikaty o błędach
-
-
-
 
 ## Uruchomienie
 #### Import
@@ -131,7 +132,6 @@ W celu edycji kodu żródłowego niezbędny będzie import kilku bibliotek.
 #### Uruchomienie
 Uruchomienie pliku .jar z następującymi argumentami
 - input - nazwa pliku z kodem w neeter
-- watch (opcjonalnie) - obserwuje i kompiluje po każdej zmianie pliku wejściowego (widzimy rezultat w czasie rzeczywistym)
 ``` 
-java -jar neeter.jar "path\input.neet" [-watch]
+java -jar neeter.jar "path\input.neet"
 ```
