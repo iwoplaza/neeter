@@ -38,6 +38,11 @@ public class StyleScope implements IContentNode
         return appliedClass;
     }
 
+    public Iterable<Map.Entry<StylableProperty, Object>> getProperties()
+    {
+        return properties.entrySet();
+    }
+
     public Iterable<IContentNode> getChildren()
     {
         return children;
@@ -47,5 +52,10 @@ public class StyleScope implements IContentNode
     public ContentType getContentType()
     {
         return ContentType.SCOPE;
+    }
+
+    public void setProperty(StylableProperty propKey, Object value)
+    {
+        this.properties.put(propKey, value);
     }
 }
