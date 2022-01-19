@@ -131,7 +131,7 @@ W celu edycji kodu żródłowego niezbędny będzie import kilku bibliotek.
 #### Uruchomienie
 Uruchomienie pliku .jar z następującymi argumentami
 - input - nazwa pliku z kodem w neeter
-- output (opcjonalnie) - nazwa pliku wyjściowego 
+- watch (opcjonalnie) - obserwuje i kompiluje po każdej zmianie pliku wejściowego (widzimy rezultat w czasie rzeczywistym)
 ``` 
-java -jar neeter.jar "path\input.neet" "path\output_name"
+java -jar neeter.jar "path\input.neet" [-watch]
 ```
