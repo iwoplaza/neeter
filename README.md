@@ -93,10 +93,31 @@ def fib(n) {
 show();
 ```
 
-- kolor tesktu
-```
+- parametry tekstu
+  - rozmiar tesktu w px
+  ```
+  [size=10]
+  ```
 
-```
+  - kolor
+  ```
+  [color=#123abc]
+  ```
+  
+  - marginesy pomiędzy akapitami
+  ```
+  [margin_top=5, margin_bottom=1]
+  ```
+  
+  - wyrównanie
+  ```
+  [alignment=10]
+  ```
+  
+  - pogrubienie
+  ```
+  [weight=800]
+  ```
 
 - formatowanie dla formuł matematycznych
 ```
