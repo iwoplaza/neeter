@@ -76,12 +76,12 @@ helloNeeter(n, ...)
 ```
 
 ```
-def hello(n) {
-    show("Hello Neeter", "\n\n");
-            
-    if (n > 0) {
-        hello(n-1);
+def fib(n) {
+    if (n <= 1) {
+        return n;
     }
+
+    return fib(n - 1) + fib(n - 2);
 }
 ```
 

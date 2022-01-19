@@ -1,7 +1,6 @@
 package com.neeter.watcher;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.*;
 import java.util.List;
 import java.util.function.Consumer;
@@ -12,11 +11,13 @@ import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
 public class Watcher implements Runnable
 {
+    private final File file;
     private final WatchService watchService;
     private final Consumer<String> changeReaction;
 
-    public Watcher(WatchService watchService, Consumer<String> changeReaction)
+    public Watcher(File file, WatchService watchService, Consumer<String> changeReaction)
     {
+        this.file = file;
         this.watchService = watchService;
         this.changeReaction = changeReaction;
     }
@@ -26,9 +27,9 @@ public class Watcher implements Runnable
     {
         try
         {
-            WatchKey key = watchService.take();
+            WatchKey key;
 
-            while (true)
+            while ((key = watchService.take()) != null)
             {
                 List<WatchEvent<?>> eventList = key.pollEvents();
 
@@ -40,14 +41,37 @@ public class Watcher implements Runnable
                     }
                     else if (event.kind() == ENTRY_MODIFY)
                     {
-                        changeReaction.accept(event.context().toString());
+                        BufferedReader br = null;
+                        boolean properFile;
+                        try
+                        {
+                            br = new BufferedReader(new FileReader(file));
+                            properFile = br.readLine() != null;
+                        }
+                        finally
+                        {
+                            if (br != null)
+                                br.close();
+                        }
+
+                        if (properFile)
+                        {
+                            changeReaction.accept(event.context().toString());
+                        }
                     }
                 }
+
+                key.reset();
             }
         }
         catch (InterruptedException e)
         {
             System.out.println("Watch service finished execution.");
+        }
+        catch (IOException e)
+        {
+            System.out.println("Watch service finished execution.");
+            e.printStackTrace();
         }
     }
 
@@ -58,6 +82,6 @@ public class Watcher implements Runnable
         Path dir = Paths.get(file.getParent());
         dir.register(watcher, ENTRY_MODIFY);
 
-        return new Watcher(watcher, changeReaction);
+        return new Watcher(file, watcher, changeReaction);
     }
 }

@@ -10,6 +10,8 @@ public interface IExecutionContext
     StringBuilder getOutputBuilder();
     Object getVariable(String key);
     Collection<Object> getArgs();
+    int getMaxCallDepth();
+    int getCallDepth();
 
     void declareVariable(String key, Object value);
     void setVariable(String key, Object value);

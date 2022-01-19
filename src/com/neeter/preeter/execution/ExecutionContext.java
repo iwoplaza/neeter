@@ -1,6 +1,5 @@
 package com.neeter.preeter.execution;
 
-import com.neeter.preeter.FunctionRepository;
 import com.neeter.preeter.PreeterRuntimeError;
 
 import java.util.HashMap;
@@ -12,15 +11,24 @@ public class ExecutionContext extends BaseExecutionContext
     final Map<String, Variable> parentVariables = new HashMap<>();
     final Map<String, Variable> variables = new HashMap<>();
 
-    public ExecutionContext(FunctionRepository functionRepository, StringBuilder outputBuilder, Map<String, Variable> globalVariables)
+    protected final int stackDepth;
+
+    public ExecutionContext(SharedExecutionData sharedExecutionData, Map<String, Variable> globalVariables, int stackDepth)
     {
-        super(functionRepository, outputBuilder);
+        super(sharedExecutionData);
         this.globalVariables = globalVariables;
+        this.stackDepth = stackDepth;
     }
 
-    public ExecutionContext(FunctionRepository functionRepository, StringBuilder outputBuilder)
+    public ExecutionContext(SharedExecutionData sharedExecutionData, int stackDepth)
     {
-        this(functionRepository, outputBuilder, new HashMap<>());
+        this(sharedExecutionData, new HashMap<>(), stackDepth);
+    }
+
+    @Override
+    public int getCallDepth()
+    {
+        return stackDepth;
     }
 
     @Override
@@ -82,13 +90,13 @@ public class ExecutionContext extends BaseExecutionContext
     @Override
     public IExecutionContext createFunctionCall()
     {
-        return new ExecutionContext(functionRepository, outputBuilder, this.globalVariables);
+        return new ExecutionContext(sharedExecutionData, this.globalVariables, this.stackDepth + 1);
     }
 
     @Override
     public IExecutionContext createDeeperScope()
     {
-        ExecutionContext newContext = new ExecutionContext(functionRepository, outputBuilder, this.globalVariables);
+        ExecutionContext newContext = new ExecutionContext(sharedExecutionData, this.globalVariables, this.stackDepth);
 
         newContext.args = this.args;
         newContext.parentVariables.putAll(this.parentVariables);

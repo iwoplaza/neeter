@@ -36,10 +36,17 @@ public class Operations
         Object aValue = a.evaluate(c);
         Object bValue = b.evaluate(c);
 
-        if (aValue instanceof Double || bValue instanceof Double)
-            return ValueHelper.asDouble(aValue) / ValueHelper.asDouble(bValue);
+        try
+        {
+            if (aValue instanceof Double || bValue instanceof Double)
+                return ValueHelper.asDouble(aValue) / ValueHelper.asDouble(bValue);
 
-        return ValueHelper.requireInt(aValue) / ValueHelper.requireInt(bValue);
+            return ValueHelper.requireInt(aValue) / ValueHelper.requireInt(bValue);
+        }
+        catch (ArithmeticException e)
+        {
+            throw new PreeterRuntimeError("Division by zero");
+        }
     };
     public static final BinaryOperation.EvaluationFunction MODULO =     (c, a, b) -> ValueHelper.requireInt(a.evaluate(c)) % ValueHelper.requireInt(b.evaluate(c));
     public static final BinaryOperation.EvaluationFunction EQUALS =     (c, a, b) -> a.evaluate(c).equals(b.evaluate(c));

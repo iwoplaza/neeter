@@ -1,5 +1,6 @@
 package com.neeter.preeter.expression;
 
+import com.neeter.preeter.PreeterRuntimeError;
 import com.neeter.preeter.execution.IExecutionContext;
 import com.neeter.preeter.parse.DocContext;
 
@@ -20,7 +21,19 @@ public class BinaryOperation extends ExpressionBase
     @Override
     public Object evaluate(IExecutionContext context)
     {
-        return evaluationFunction.evaluate(context, leftSide, rightSide);
+        try
+        {
+            return evaluationFunction.evaluate(context, leftSide, rightSide);
+        }
+        catch(PreeterRuntimeError e)
+        {
+            if (e.getDocContext() == null)
+            {
+                throw new PreeterRuntimeError(e.getMessage(), this.docContext);
+            }
+
+            throw e;
+        }
     }
 
     @FunctionalInterface

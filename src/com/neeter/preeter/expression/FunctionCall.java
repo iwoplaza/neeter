@@ -36,6 +36,11 @@ public class FunctionCall extends ExpressionBase
         IExecutionContext functionContext = context.createFunctionCall();
         functionContext.setArgs(argValues);
 
+        if (functionContext.getCallDepth() > functionContext.getMaxCallDepth())
+        {
+            throw new PreeterRuntimeError(String.format("Exceeded the %d function call depth limit!", functionContext.getMaxCallDepth()), docContext);
+        }
+
         // Named parameters
         List<String> parameterNames = expression.getNamedParameters();
 

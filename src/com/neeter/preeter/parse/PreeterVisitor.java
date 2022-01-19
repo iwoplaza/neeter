@@ -47,6 +47,24 @@ public class PreeterVisitor extends PreeterParserBaseVisitor<IExpression>
     }
 
     @Override
+    public IExpression visitInstruction(PreeterParser.InstructionContext ctx)
+    {
+        PreeterParser.StatementContext statementContext = ctx.statement();
+        PreeterParser.ExprContext exprContext = ctx.expr();
+
+        if (statementContext != null)
+        {
+            return visit(statementContext);
+        }
+        else if (exprContext != null)
+        {
+            return visit(exprContext);
+        }
+
+        return null;
+    }
+
+    @Override
     public IExpression visitFuncDef(PreeterParser.FuncDefContext ctx)
     {
         String funcId = ctx.ID().getText();

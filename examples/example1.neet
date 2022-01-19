@@ -26,7 +26,7 @@ Simple formula: {{x = 1 + 2 + 4 + ... + 128}}.
         print_formula("x + y", x + y);
         print_formula("x * y", x * y);
         print_formula("x / y", x / y);
-        print_formula("x / 0", x / 1);
+        print_formula("x / 1", x / 1);
         show("{{END}}\n\n");
     }
     print_formula("x", x);
@@ -50,7 +50,11 @@ Simple formula: {{x = 1 + 2 + 4 + ... + 128}}.
 
 #h1 { Test 5 - Returns and Fibonacci }
 @{
-    show("5th number of the Fibonacci sequence: ", 5);
+    let i = 0;
+    while (i < 10) {
+        show("Fib(", i, ") = ", fib(i), "\n\n");
+        i = i + 1;
+    }
 @}
 
 @{
@@ -92,11 +96,12 @@ Simple formula: {{x = 1 + 2 + 4 + ... + 128}}.
         }
     }
 
+    // Fibonacci sequence calculator
     def fib(n) {
         if (n <= 1) {
             return n;
         }
 
-        return 1 + fib(1+2);
+        return fib(n - 1) + fib(n - 2);
     }
 @}

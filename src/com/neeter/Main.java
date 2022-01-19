@@ -7,10 +7,7 @@ import com.neeter.grammar.NeeterParser;
 import com.neeter.grammar.PreeterLexer;
 import com.neeter.grammar.PreeterParser;
 import com.neeter.html.HTMLGenerator;
-import com.neeter.preeter.FunctionRepository;
-import com.neeter.preeter.PreeterCompileError;
-import com.neeter.preeter.PreeterEngine;
-import com.neeter.preeter.PreeterRuntimeError;
+import com.neeter.preeter.*;
 import com.neeter.preeter.parse.PreeterVisitor;
 import com.neeter.watcher.Watcher;
 import org.antlr.v4.runtime.CharStream;
@@ -32,10 +29,14 @@ public class Main
     {
         // Collecting tokens
         PreeterLexer lexer = new PreeterLexer(charStream);
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(ThrowingErrorListener.INSTANCE);
 
         // Parsing
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         PreeterParser parser = new PreeterParser(tokens);
+        parser.removeErrorListeners();
+        parser.addErrorListener(ThrowingErrorListener.INSTANCE);
         ParseTree tree = parser.program();
 
         // Visiting the tree
@@ -102,14 +103,14 @@ public class Main
         }
         catch (PreeterRuntimeError e)
         {
-            System.err.println("Failed to execute Preeter. Reason: ");
-            System.err.println(String.format("[line %s] %s", e.getDocContext(), e.getMessage()));
+            System.out.println("Failed to execute Preeter. Reason: ");
+            System.out.println(String.format("[line %s] %s", e.getDocContext(), e.getMessage()));
             return;
         }
         catch (PreeterCompileError error)
         {
-            System.err.println("Failed to compile Preeter. Reason: ");
-            System.err.println(String.format("[line %s] %s", error.getDocContext(), error.getMessage()));
+            System.out.println("Failed to compile Preeter. Reason: ");
+            System.out.println(String.format("[line %s] %s", error.getDocContext(), error.getMessage()));
             return;
         }
 
@@ -130,6 +131,8 @@ public class Main
         {
             e.printStackTrace();
         }
+
+        System.out.println("Compiled successfully.");
     }
 
     public static void main(String[] args)
@@ -166,6 +169,7 @@ public class Main
                 Watcher watcher = Watcher.watchFile(inputFile, (filename) -> {
                     if (inputFile.getName().startsWith(filename))
                     {
+                        System.out.println("============================");
                         System.out.println("File changed. Recompiling...");
                         try
                         {

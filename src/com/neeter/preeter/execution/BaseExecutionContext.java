@@ -1,34 +1,36 @@
 package com.neeter.preeter.execution;
 
 import com.neeter.preeter.FunctionRepository;
-import com.neeter.preeter.PreeterRuntimeError;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class BaseExecutionContext implements IExecutionContext
 {
-    protected final FunctionRepository functionRepository;
-    protected final StringBuilder outputBuilder;
     protected Collection<Object> args;
 
-    public BaseExecutionContext(FunctionRepository functionRepository, StringBuilder outputBuilder)
+    protected final SharedExecutionData sharedExecutionData;
+
+    public BaseExecutionContext(SharedExecutionData sharedExecutionData)
     {
-        this.functionRepository = functionRepository;
-        this.outputBuilder = outputBuilder;
+        this.sharedExecutionData = sharedExecutionData;
     }
 
     @Override
     public FunctionRepository getFunctionRepository()
     {
-        return functionRepository;
+        return sharedExecutionData.functionRepository;
     }
 
     @Override
     public StringBuilder getOutputBuilder()
     {
-        return outputBuilder;
+        return sharedExecutionData.outputBuilder;
+    }
+
+    @Override
+    public int getMaxCallDepth()
+    {
+        return sharedExecutionData.maxStackDepth;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.neeter.preeter.execution;
 
-import com.neeter.preeter.FunctionRepository;
 import com.neeter.preeter.PreeterRuntimeError;
 
 import java.util.HashMap;
@@ -10,9 +9,15 @@ public class RootExecutionContext extends BaseExecutionContext
 {
     private final Map<String, Variable> globalVariables = new HashMap<>();
 
-    public RootExecutionContext(FunctionRepository functionRepository, StringBuilder outputBuilder)
+    public RootExecutionContext(SharedExecutionData sharedExecutionData)
     {
-        super(functionRepository, outputBuilder);
+        super(sharedExecutionData);
+    }
+
+    @Override
+    public int getCallDepth()
+    {
+        return 0;
     }
 
     @Override
@@ -58,12 +63,12 @@ public class RootExecutionContext extends BaseExecutionContext
     @Override
     public IExecutionContext createFunctionCall()
     {
-        return new ExecutionContext(functionRepository, outputBuilder, this.globalVariables);
+        return new ExecutionContext(sharedExecutionData, this.globalVariables, 1);
     }
 
     @Override
     public IExecutionContext createDeeperScope()
     {
-        return new ExecutionContext(functionRepository, outputBuilder, this.globalVariables);
+        return new ExecutionContext(sharedExecutionData, this.globalVariables, 0);
     }
 }

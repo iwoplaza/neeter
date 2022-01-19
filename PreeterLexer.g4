@@ -40,7 +40,7 @@ FRONT_SLASH: '/';
 MODULO: '%';
 AND: '&&';
 OR: '||';
-WHITESPACE : (SPACES | NEWLINE_CHAR) -> skip;
+WHITESPACE : (SPACES | NEWLINE_CHAR | COMMENT) -> skip;
 STRING_LITERAL: '"' ~('"')* '"';
 INT_LITERAL: [0-9]+;
 

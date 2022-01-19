@@ -1,6 +1,7 @@
 package com.neeter.preeter;
 
 import com.neeter.preeter.execution.RootExecutionContext;
+import com.neeter.preeter.execution.SharedExecutionData;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class PreeterEngine
     {
         StringBuilder stringBuilder = new StringBuilder();
 
-        RootExecutionContext context = new RootExecutionContext(functionRepository, stringBuilder);
+        RootExecutionContext context = new RootExecutionContext(new SharedExecutionData(functionRepository, stringBuilder, 1000));
 
         for (IPreeterNode node : nodes)
         {
