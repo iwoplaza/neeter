@@ -104,6 +104,32 @@ def fib(n) {
     - `show(5 + 6)`
     - `show("Some", " words", " are concatinated")`
 
+### Parametry tekstu
+  - rozmiar tesktu w px
+  ```
+  [size=10]
+  ```
+
+  - kolor
+  ```
+  [color=#123abc]
+  ```
+  
+  - marginesy pomiędzy akapitami
+  ```
+  [margin_top=5, margin_bottom=1]
+  ```
+  
+  - wyrównanie
+  ```
+  [alignment=10]
+  ```
+  
+  - pogrubienie
+  ```
+  [weight=800]
+  ```
+
 ### Formatowanie dla formuł matematycznych
 ```
 {{x = 1 + 2 + 4 + ... + 128}}
