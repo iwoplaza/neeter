@@ -11,7 +11,7 @@
 * [Uruchomienie](#uruchomienie)
 
 ## Neeter
-Jest to język przeznaczony do formatowania tekstu. Został stworzony w celu jak uproszczonego tworzenia, formatowania tekstu i jego parametrów. Jako wyjście generwoany jest odpowiednio sforamtowany plik name.html. Środowisko jest tak przygotowane, że możemy zmienić format pliku wyjściowego i otrzymać `svg` lub `pdf`.
+Jest to język przeznaczony do formatowania tekstu. Został stworzony w celu uproszczonego tworzenia, formatowania tekstu i jego parametrów. Jako wyjście generwoany jest odpowiednio sforamtowany plik name.html. Środowisko jest tak przygotowane, że możemy zmienić format pliku wyjściowego i otrzymać `svg` lub `pdf`.
 <br/>
 ![img_5.png](img/neeter_diagram.png)
 
